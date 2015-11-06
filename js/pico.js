@@ -1,0 +1,807 @@
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _instanceof(left, right) { if (right != null && right[Symbol.hasInstance]) { return right[Symbol.hasInstance](left); } else { return left instanceof right; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Pico = {
+	UI: {}
+};
+Pico.Color = (function () {
+	function Color(red, green, blue, alpha) {
+		_classCallCheck(this, Color);
+
+		if (typeof green === "undefined") {
+			if (red.substr(0, 1) === '#') {
+				var hex = red.substr(1).split('');
+				if (hex.length == 3) {
+					this._red = parseInt(hex[0] + hex[0], 16);
+					this._green = parseInt(hex[1] + hex[1], 16);
+					this._blue = parseInt(hex[2] + hex[2], 16);
+				} else {
+					this._red = parseInt(hex[0] + hex[1], 16);
+					this._green = parseInt(hex[2] + hex[3], 16);
+					this._blue = parseInt(hex[4] + hex[5], 16);
+				}
+				this._alpha = 100;
+			} else {
+				var color = (color + '').toLowerCase();
+				for (var c in Pico.Colors) {
+					if (Pico.Colors.hasOwnProperty(c) && (c + '').toLowerCase() == color) {
+						var _color = Pico.Colors[c];
+						this._red = _color.red;
+						this._green = _color.green;
+						this._blue = _color.blue;
+						this._alpha = _color.alpha;
+						break;
+					}
+				}
+			}
+		} else {
+			if (typeof alpha === "undefined") {
+				this._red = red;
+				this._green = green;
+				this._blue = blue;
+				this._alpha = 100;
+			} else {
+				this._red = red;
+				this._green = green;
+				this._blue = blue;
+				this._alpha = alpha;
+			}
+		}
+	}
+
+	_createClass(Color, [{
+		key: 'toRgba',
+		value: function toRgba() {
+			return 'rgba(' + this._red + ', ' + this._green + ', ' + this._blue + ', ' + Math.floor(this._alpha / 100) + ')';
+		}
+	}, {
+		key: 'toRgb',
+		value: function toRgb() {
+			return 'rgb(' + this._red + ', ' + this._green + ', ' + this._blue + ')';
+		}
+	}, {
+		key: 'toHex',
+		value: function toHex() {
+			var r = this._red < 17 ? '0' + this._red.toString(16) : this._red.toString(16);
+			var g = this._green < 17 ? '0' + this._green.toString(16) : this._green.toString(16);
+			var b = this._blue < 17 ? '0' + this._blue.toString(16) : this._blue.toString(16);
+			return '#' + r + g + b;
+		}
+	}, {
+		key: 'alpha',
+		get: function get() {
+			return this._alpha;
+		},
+		set: function set(alpha) {
+			this._alpha = alpha;
+		}
+	}, {
+		key: 'red',
+		get: function get() {
+			return this._red;
+		},
+		set: function set(red) {
+			this._red = red;
+		}
+	}, {
+		key: 'green',
+		get: function get() {
+			return this._green;
+		},
+		set: function set(green) {
+			this._green = green;
+		}
+	}, {
+		key: 'blue',
+		get: function get() {
+			return this._blue;
+		},
+		set: function set(blue) {
+			this._blue = blue;
+		}
+	}], [{
+		key: 'fromRgba',
+		value: function fromRgba(red, green, blue, alpha) {
+			return new Pico.Color(red, green, blue, alpha);
+		}
+	}, {
+		key: 'fromRgb',
+		value: function fromRgb(red, green, blue) {
+			return new Pico.Color(red, green, blue, 100);
+		}
+	}, {
+		key: 'fromHex',
+		value: function fromHex(hex) {
+			return new Pico.Color(hex);
+		}
+	}, {
+		key: 'fromColorName',
+		value: function fromColorName(color) {
+			return new Pico.Color(color);
+		}
+	}]);
+
+	return Color;
+})();
+
+Pico.Colors = {
+	AliceBlue: new Pico.Color('#F0F8FF'),
+	AntiqueWhite: new Pico.Color('#FAEBD7'),
+	Aqua: new Pico.Color('#00FFFF'),
+	Aquamarine: new Pico.Color('#7FFFD4'),
+	Azure: new Pico.Color('#F0FFFF'),
+	Beige: new Pico.Color('#F5F5DC'),
+	Bisque: new Pico.Color('#FFE4C4'),
+	Black: new Pico.Color('#000000'),
+	BlanchedAlmond: new Pico.Color('#FFEBCD'),
+	Blue: new Pico.Color('#0000FF'),
+	BlueViolet: new Pico.Color('#8A2BE2'),
+	Brown: new Pico.Color('#A52A2A'),
+	BurlyWood: new Pico.Color('#DEB887'),
+	CadetBlue: new Pico.Color('#5F9EA0'),
+	Chartreuse: new Pico.Color('#7FFF00'),
+	Chocolate: new Pico.Color('#D2691E'),
+	Coral: new Pico.Color('#FF7F50'),
+	CornflowerBlue: new Pico.Color('#6495ED'),
+	Cornsilk: new Pico.Color('#FFF8DC'),
+	Crimson: new Pico.Color('#DC143C'),
+	Cyan: new Pico.Color('#00FFFF'),
+	DarkBlue: new Pico.Color('#00008B'),
+	DarkCyan: new Pico.Color('#008B8B'),
+	DarkGoldenRod: new Pico.Color('#B8860B'),
+	DarkGray: new Pico.Color('#A9A9A9'),
+	DarkGreen: new Pico.Color('#006400'),
+	DarkKhaki: new Pico.Color('#BDB76B'),
+	DarkMagenta: new Pico.Color('#8B008B'),
+	DarkOliveGreen: new Pico.Color('#556B2F'),
+	DarkOrange: new Pico.Color('#FF8C00'),
+	DarkOrchid: new Pico.Color('#9932CC'),
+	DarkRed: new Pico.Color('#8B0000'),
+	DarkSalmon: new Pico.Color('#E9967A'),
+	DarkSeaGreen: new Pico.Color('#8FBC8F'),
+	DarkSlateBlue: new Pico.Color('#483D8B'),
+	DarkSlateGray: new Pico.Color('#2F4F4F'),
+	DarkTurquoise: new Pico.Color('#00CED1'),
+	DarkViolet: new Pico.Color('#9400D3'),
+	DeepPink: new Pico.Color('#FF1493'),
+	DeepSkyBlue: new Pico.Color('#00BFFF'),
+	DimGray: new Pico.Color('#696969'),
+	DodgerBlue: new Pico.Color('#1E90FF'),
+	FireBrick: new Pico.Color('#B22222'),
+	FloralWhite: new Pico.Color('#FFFAF0'),
+	ForestGreen: new Pico.Color('#228B22'),
+	Fuchsia: new Pico.Color('#FF00FF'),
+	Gainsboro: new Pico.Color('#DCDCDC'),
+	GhostWhite: new Pico.Color('#F8F8FF'),
+	Gold: new Pico.Color('#FFD700'),
+	GoldenRod: new Pico.Color('#DAA520'),
+	Gray: new Pico.Color('#808080'),
+	Green: new Pico.Color('#008000'),
+	GreenYellow: new Pico.Color('#ADFF2F'),
+	HoneyDew: new Pico.Color('#F0FFF0'),
+	HotPink: new Pico.Color('#FF69B4'),
+	IndianRed: new Pico.Color('#CD5C5C'),
+	Indigo: new Pico.Color('#4B0082'),
+	Ivory: new Pico.Color('#FFFFF0'),
+	Khaki: new Pico.Color('#F0E68C'),
+	Lavender: new Pico.Color('#E6E6FA'),
+	LavenderBlush: new Pico.Color('#FFF0F5'),
+	LawnGreen: new Pico.Color('#7CFC00'),
+	LemonChiffon: new Pico.Color('#FFFACD'),
+	LightBlue: new Pico.Color('#ADD8E6'),
+	LightCoral: new Pico.Color('#F08080'),
+	LightCyan: new Pico.Color('#E0FFFF'),
+	LightGoldenRodYellow: new Pico.Color('#FAFAD2'),
+	LightGray: new Pico.Color('#D3D3D3'),
+	LightGreen: new Pico.Color('#90EE90'),
+	LightPink: new Pico.Color('#FFB6C1'),
+	LightSalmon: new Pico.Color('#FFA07A'),
+	LightSeaGreen: new Pico.Color('#20B2AA'),
+	LightSkyBlue: new Pico.Color('#87CEFA'),
+	LightSlateGray: new Pico.Color('#778899'),
+	LightSteelBlue: new Pico.Color('#B0C4DE'),
+	LightYellow: new Pico.Color('#FFFFE0'),
+	Lime: new Pico.Color('#00FF00'),
+	LimeGreen: new Pico.Color('#32CD32'),
+	Linen: new Pico.Color('#FAF0E6'),
+	Magenta: new Pico.Color('#FF00FF'),
+	Maroon: new Pico.Color('#800000'),
+	MediumAquaMarine: new Pico.Color('#66CDAA'),
+	MediumBlue: new Pico.Color('#0000CD'),
+	MediumOrchid: new Pico.Color('#BA55D3'),
+	MediumPurple: new Pico.Color('#9370DB'),
+	MediumSeaGreen: new Pico.Color('#3CB371'),
+	MediumSlateBlue: new Pico.Color('#7B68EE'),
+	MediumSpringGreen: new Pico.Color('#00FA9A'),
+	MediumTurquoise: new Pico.Color('#48D1CC'),
+	MediumVioletRed: new Pico.Color('#C71585'),
+	MidnightBlue: new Pico.Color('#191970'),
+	MintCream: new Pico.Color('#F5FFFA'),
+	MistyRose: new Pico.Color('#FFE4E1'),
+	Moccasin: new Pico.Color('#FFE4B5'),
+	NavajoWhite: new Pico.Color('#FFDEAD'),
+	Navy: new Pico.Color('#000080'),
+	OldLace: new Pico.Color('#FDF5E6'),
+	Olive: new Pico.Color('#808000'),
+	OliveDrab: new Pico.Color('#6B8E23'),
+	Orange: new Pico.Color('#FFA500'),
+	OrangeRed: new Pico.Color('#FF4500'),
+	Orchid: new Pico.Color('#DA70D6'),
+	PaleGoldenRod: new Pico.Color('#EEE8AA'),
+	PaleGreen: new Pico.Color('#98FB98'),
+	PaleTurquoise: new Pico.Color('#AFEEEE'),
+	PaleVioletRed: new Pico.Color('#DB7093'),
+	PapayaWhip: new Pico.Color('#FFEFD5'),
+	PeachPuff: new Pico.Color('#FFDAB9'),
+	Peru: new Pico.Color('#CD853F'),
+	Pink: new Pico.Color('#FFC0CB'),
+	Plum: new Pico.Color('#DDA0DD'),
+	PowderBlue: new Pico.Color('#B0E0E6'),
+	Purple: new Pico.Color('#800080'),
+	RebeccaPurple: new Pico.Color('#663399'),
+	Red: new Pico.Color('#FF0000'),
+	RosyBrown: new Pico.Color('#BC8F8F'),
+	RoyalBlue: new Pico.Color('#4169E1'),
+	SaddleBrown: new Pico.Color('#8B4513'),
+	Salmon: new Pico.Color('#FA8072'),
+	SandyBrown: new Pico.Color('#F4A460'),
+	SeaGreen: new Pico.Color('#2E8B57'),
+	SeaShell: new Pico.Color('#FFF5EE'),
+	Sienna: new Pico.Color('#A0522D'),
+	Silver: new Pico.Color('#C0C0C0'),
+	SkyBlue: new Pico.Color('#87CEEB'),
+	SlateBlue: new Pico.Color('#6A5ACD'),
+	SlateGray: new Pico.Color('#708090'),
+	Snow: new Pico.Color('#FFFAFA'),
+	SpringGreen: new Pico.Color('#00FF7F'),
+	SteelBlue: new Pico.Color('#4682B4'),
+	Tan: new Pico.Color('#D2B48C'),
+	Teal: new Pico.Color('#008080'),
+	Thistle: new Pico.Color('#D8BFD8'),
+	Tomato: new Pico.Color('#FF6347'),
+	Turquoise: new Pico.Color('#40E0D0'),
+	Violet: new Pico.Color('#EE82EE'),
+	Wheat: new Pico.Color('#F5DEB3'),
+	White: new Pico.Color('#FFFFFF'),
+	WhiteSmoke: new Pico.Color('#F5F5F5'),
+	Yellow: new Pico.Color('#FFFF00'),
+	YellowGreen: new Pico.Color('#9ACD32'),
+	Transparent: new Pico.Color(0, 0, 0, 0),
+	PicoWindow: new Pico.Color(40, 40, 40, 100),
+	PicoText: new Pico.Color(240, 240, 240, 100)
+};
+Pico.Cursor = (function () {
+	function Cursor(name, noImage) {
+		_classCallCheck(this, Cursor);
+
+		this._name = name;
+		this._noImage = noImage;
+	}
+
+	_createClass(Cursor, [{
+		key: 'image',
+		set: function set(image) {
+			this._name = image;
+			this._noImage = false;
+		},
+		get: function get() {
+			return this._name;
+		}
+	}, {
+		key: 'style',
+		get: function get() {
+			if (this._noImage) {
+				return this._name;
+			} else {
+				return 'url(' + this._name + ')';
+			}
+		}
+	}]);
+
+	return Cursor;
+})();
+
+Pico.Cursors = {
+	Auto: new Pico.Cursor('auto', true),
+	Default: new Pico.Cursor("default", true),
+	ContextMenu: new Pico.Cursor("context-menu", true),
+	Help: new Pico.Cursor("help", true),
+	Pointer: new Pico.Cursor("pointer", true),
+	Progress: new Pico.Cursor("progress", true),
+	Wait: new Pico.Cursor("wait", true),
+	Cell: new Pico.Cursor("cell", true),
+	Crosshair: new Pico.Cursor("crosshair", true),
+	Text: new Pico.Cursor("text", true),
+	Alias: new Pico.Cursor("alias", true),
+	Copy: new Pico.Cursor("copy", true),
+	Move: new Pico.Cursor("move", true),
+	NResize: new Pico.Cursor("n-resize", true),
+	EResize: new Pico.Cursor("e-resize", true),
+	SResize: new Pico.Cursor("s-resize", true),
+	WResize: new Pico.Cursor("w-resize", true),
+	NSResize: new Pico.Cursor("ns-resize", true),
+	EWResize: new Pico.Cursor("ew-resize", true),
+	NEResize: new Pico.Cursor("ne-resize", true),
+	NWResize: new Pico.Cursor("nw-resize", true),
+	SEResize: new Pico.Cursor("se-resize", true),
+	SWResize: new Pico.Cursor("sw-resize", true),
+	NESWResize: new Pico.Cursor("nesw-resize", true),
+	NWSEResize: new Pico.Cursor("nwse-resize", true)
+};
+Pico.FontStyle = {
+	ExtraLight: 0,
+	ExtraLightItalic: 1,
+	Light: 2,
+	LightItalic: 3,
+	Book: 4,
+	BookItalic: 5,
+	Normal: 6,
+	Italic: 7,
+	Medium: 8,
+	MediumItalic: 9,
+	SemiBold: 10,
+	SemiBoldItalic: 11,
+	Bold: 2,
+	BoldItalic: 3,
+	Black: 14,
+	BlackItalic: 15,
+	ExtraBlack: 16,
+	ExtraBlackItalic: 17
+};
+Pico.Font = (function () {
+	function Font() {
+		var family = arguments.length <= 0 || arguments[0] === undefined ? 'Arial' : arguments[0];
+		var size = arguments.length <= 1 || arguments[1] === undefined ? 14 : arguments[1];
+		var type = arguments.length <= 2 || arguments[2] === undefined ? Pico.FontStyle.Normal : arguments[2];
+		var underline = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+
+		_classCallCheck(this, Font);
+
+		this._family = family;
+		this._size = size;
+		this._type = type;
+		this._underline = underline;
+	}
+
+	_createClass(Font, [{
+		key: 'toCSSArgs',
+		value: function toCSSArgs() {
+			return {
+				fontFamily: '"' + this._family + '", sans-serif',
+				fontSize: this._size + 'px',
+				fontStyle: this._type % 2 == 1 ? 'italic' : 'normal',
+				fontWeight: (Math.floor(this._type / 2) + 1) * 100,
+				textDecoration: this._underline ? 'underline' : 'none'
+			};
+		}
+	}, {
+		key: 'family',
+		set: function set(family) {
+			this._family = family;
+		},
+		get: function get() {
+			return this._family;
+		}
+	}, {
+		key: 'size',
+		set: function set(size) {
+			this._size = size;
+		},
+		get: function get() {
+			return this._size;
+		}
+	}, {
+		key: 'type',
+		set: function set(type) {
+			if (this._type > -1 && this.type < 18) {
+				this._type = type;
+			} else {
+				this._type = Pico.FontStyle.Normal;
+			}
+		},
+		get: function get() {
+			return this._type;
+		}
+	}, {
+		key: 'underline',
+		set: function set(underline) {
+			this._underline = underline;
+		},
+		get: function get() {
+			return this._underline;
+		}
+	}]);
+
+	return Font;
+})();
+Pico.Position = (function () {
+	function Position(x, y) {
+		_classCallCheck(this, Position);
+
+		this._x = x;
+		this._y = y;
+	}
+
+	_createClass(Position, [{
+		key: 'x',
+		set: function set(x) {
+			this._x = x;
+		},
+		get: function get() {
+			return this._x;
+		}
+	}, {
+		key: 'y',
+		set: function set(y) {
+			this._y = y;
+		},
+		get: function get() {
+			return this._y;
+		}
+	}]);
+
+	return Position;
+})();
+Pico.Size = (function () {
+	function Size(width, height) {
+		_classCallCheck(this, Size);
+
+		this._width = width;
+		this._height = height;
+	}
+
+	_createClass(Size, [{
+		key: 'width',
+		set: function set(width) {
+			this._width = width;
+		},
+		get: function get() {
+			return this._width;
+		}
+	}, {
+		key: 'height',
+		set: function set(height) {
+			this._height = height;
+		},
+		get: function get() {
+			return this._height;
+		}
+	}]);
+
+	return Size;
+})();
+Pico.UI.PicoObject = (function () {
+	function PicoObject() {
+		_classCallCheck(this, PicoObject);
+
+		this._size = new Pico.Size(0, 0);
+		this._position = new Pico.Position(0, 0);
+		this._visible = true;
+		this._cursor = Pico.Cursors.Default;
+		this._foreground = Pico.Colors.PicoText;
+		this._background = Pico.Colors.PicoWindow;
+		this._domElement = document.createElement('pico');
+		this._domElement.style.width = this._size.width + 'px';
+		this._domElement.style.height = this._size.height + 'px';
+		this._domElement.style.top = this._position.y + 'px';
+		this._domElement.style.left = this._position.x + 'px';
+		this._domElement.style.display = this._visible ? 'block' : 'none';
+		this._domElement.style.backgroundColor = this._background.toRgba();
+		this._domElement.style.color = this._foreground.toRgba();
+		this._domElement.style.cursor = this._cursor.style;
+	}
+
+	_createClass(PicoObject, [{
+		key: 'background',
+		set: function set(color) {
+			if (_instanceof(color, Pico.Color)) {
+				this._background = color;
+			} else {
+				this._background = new Pico.Color(color);
+			}
+			this._domElement.style.backgroundColor = this._background.toRgba();
+		},
+		get: function get() {
+			return this._background;
+		}
+	}, {
+		key: 'foreground',
+		set: function set(color) {
+			if (_instanceof(color, Pico.Color)) {
+				this._foreground = color;
+			} else {
+				this._foreground = new Pico.Color(color);
+			}
+			this._domElement.style.color = this._foreground.toRgba();
+		},
+		get: function get() {
+			return this._foreground;
+		}
+	}, {
+		key: 'cursor',
+		set: function set(cursor) {
+			if (_instanceof(cursor, Pico.Cursor)) {
+				this._cursor = cursor;
+				this._domElement.style.cursor = this._cursor.style;
+			}
+		},
+		get: function get() {
+			return this._cursor;
+		}
+	}, {
+		key: 'position',
+		set: function set(position) {
+			if (_instanceof(position, Pico.Position)) {
+				this._position = position;
+				this._domElement.style.top = this._position.y + 'px';
+				this._domElement.style.left = this._position.x + 'px';
+			}
+		},
+		get: function get() {
+			return this._position;
+		}
+	}, {
+		key: 'size',
+		set: function set(size) {
+			if (_instanceof(size, Pico.Size)) {
+				this._size = size;
+				this._domElement.style.width = this._size.width + 'px';
+				this._domElement.style.height = this._size.height + 'px';
+			}
+		},
+		get: function get() {
+			return this._size;
+		}
+	}, {
+		key: 'visible',
+		set: function set(visible) {
+			this._visible = visible;
+			this._domElement.style.display = this._visible ? 'block' : 'none';
+		},
+		get: function get() {
+			return this._visible;
+		}
+	}, {
+		key: 'domElement',
+		get: function get() {
+			return this._domElement;
+		}
+	}]);
+
+	return PicoObject;
+})();
+Pico.UI.Label = (function (_Pico$UI$PicoObject) {
+	_inherits(Label, _Pico$UI$PicoObject);
+
+	function Label(text) {
+		_classCallCheck(this, Label);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Label).call(this));
+
+		_this._text = text === undefined ? '' : text;
+		_this._domElement.className = 'pico-label';
+		_this._domElement.innerHTML = _this._text;
+		_this._font = new Pico.Font();
+		var cssArgs = _this._font.toCSSArgs();
+		_this._domElement.style.fontSize = cssArgs.fontSize;
+		_this._domElement.style.fontWeight = cssArgs.fontWeight;
+		_this._domElement.style.textDecoration = cssArgs.textDecoration;
+		_this._domElement.style.fontStyle = cssArgs.fontStyle;
+		_this._domElement.style.fontFamily = cssArgs.fontFamily;
+		return _this;
+	}
+
+	_createClass(Label, [{
+		key: 'font',
+		set: function set(font) {
+			if (_instanceof(font, Pico.Font)) {
+				this._font = font;
+				var cssArgs = this._font.toCSSArgs();
+				this._domElement.style.fontSize = cssArgs.fontSize;
+				this._domElement.style.fontWeight = cssArgs.fontWeight;
+				this._domElement.style.textDecoration = cssArgs.textDecoration;
+				this._domElement.style.fontStyle = cssArgs.fontStyle;
+				this._domElement.style.fontFamily = cssArgs.fontFamily;
+			}
+		},
+		get: function get() {
+			return this._font;
+		}
+	}, {
+		key: 'text',
+		set: function set(text) {
+			this._text = text;
+			this._domElement.innerHTML = this._text;
+		},
+		get: function get() {
+			return this._text;
+		}
+	}]);
+
+	return Label;
+})(Pico.UI.PicoObject);
+Pico.UI.Panel = (function (_Pico$UI$PicoObject2) {
+	_inherits(Panel, _Pico$UI$PicoObject2);
+
+	function Panel() {
+		_classCallCheck(this, Panel);
+
+		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
+
+		_this2._domElements = document.createElement('pico');
+		_this2._domElements.className = 'pico-elements';
+		_this2._domElement.appendChild(_this2._domElements);
+		_this2._domElement.className = 'pico-panel';
+		_this2._elements = new Pico.UI._Elements(_this2._domElements);
+		return _this2;
+	}
+
+	_createClass(Panel, [{
+		key: 'elements',
+		get: function get() {
+			return this._elements;
+		}
+	}]);
+
+	return Panel;
+})(Pico.UI.PicoObject);
+Pico.UI.Window = (function (_Pico$UI$Panel) {
+	_inherits(Window, _Pico$UI$Panel);
+
+	function Window(title) {
+		_classCallCheck(this, Window);
+
+		var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
+
+		_this3.visible = false;
+		_this3._title = title === undefined ? '' : title;
+		_this3._titleElement = document.createElement('pico');
+		_this3._titleElement.className = 'pico-window-title';
+		_this3._titleElement.innerHTML = _this3._title;
+		_this3._minimizeElement = document.createElement('pico');
+		_this3._minimizeElement.className = 'pico-minimize';
+		_this3._minimizeElement.innerHTML = '–︎';
+		document.body.appendChild(_this3._domElement);
+		_this3._domElement.className = 'pico-window';
+		_this3._domElement.appendChild(_this3._titleElement);
+		_this3._domElement.appendChild(_this3._minimizeElement);
+		var diff = {};
+		var move = false;
+		var open = true;
+		var obj = _this3;
+		_this3._minimizeElement.addEventListener('click', function (e) {
+			if (!open) {
+				e.target.innerHTML = '–︎';
+				obj._domElement.style.height = obj.size.height + 'px';
+				if (obj.position.y + obj.size.height >= window.innerHeight) {
+					obj.position = new Pico.Position(obj.position.x, obj.position.y - (obj.position.y + obj.size.height - window.innerHeight));
+				}
+				obj._elements._domElement.style.display = 'block';
+			} else {
+				e.target.innerHTML = '◻';
+				obj._domElement.style.height = 20 + 'px';
+				obj._elements._domElement.style.display = 'none';
+			}
+			open = !open;
+		});
+		_this3._titleElement.addEventListener('mousedown', function (e) {
+			diff.x = e.offsetX;
+			diff.y = e.offsetY;
+			move = true;
+		});
+		var obj = _this3;
+		window.addEventListener('mousemove', function (e) {
+			if (move) {
+				var x = e.pageX;
+				var y = e.pageY;
+				if (x < 0) {
+					x = 0;
+				}
+				if (y < 0) {
+					y = 0;
+				}
+				if (x < diff.x) {
+					diff.x = x;
+				}
+				if (y <= diff.y) {
+					diff.y = y;
+				}
+				x = x - diff.x;
+				y = y - diff.y;
+				if (x + obj._titleElement.clientWidth >= window.innerWidth) {
+					x = window.innerWidth - obj._titleElement.clientWidth - 1;
+				}
+				if (y + obj._domElement.clientHeight >= window.innerHeight) {
+					y = window.innerHeight - obj._domElement.clientHeight;
+				}
+
+				obj.position = new Pico.Position(x, y);
+			}
+		});
+		window.addEventListener('mouseup', function () {
+			move = false;
+		});
+		return _this3;
+	}
+
+	_createClass(Window, [{
+		key: 'show',
+		value: function show() {
+			this.visible = true;
+		}
+	}, {
+		key: 'hide',
+		value: function hide() {
+			this.visible = false;
+		}
+	}, {
+		key: 'title',
+		set: function set(title) {
+			this._title = title;
+			this._titleElement.innerHTML = this._title;
+		},
+		get: function get() {
+			return this._title;
+		}
+	}]);
+
+	return Window;
+})(Pico.UI.Panel);
+
+Pico.UI._Elements = (function () {
+	function Elements(domElement) {
+		_classCallCheck(this, Elements);
+
+		this._array = [];
+		this._domElement = domElement;
+	}
+
+	_createClass(Elements, [{
+		key: 'add',
+		value: function add(arg) {
+			this._array.push(arg);
+			this._domElement.appendChild(arg.domElement);
+		}
+	}, {
+		key: 'get',
+		value: function get(i) {
+			return this.array[i];
+		}
+	}, {
+		key: 'removeLast',
+		value: function removeLast() {
+			var item = this._array.pop();
+			this._domElement.removeChild(item.domElement);
+			return item;
+		}
+	}, {
+		key: 'removeAt',
+		value: function removeAt(i) {
+			var item = this._array.splice(i, 1);
+			this._domElement.removeChild(item.domElement);
+			return item;
+		}
+	}, {
+		key: 'addAt',
+		value: function addAt(i, arg) {
+			var item = this._array.splice(i, 0, arg);
+			if (this._domElement.childNodes[i] === this._domElement.lastChild) {
+				this._domElement.appendChild(arg.domElement);
+			} else {
+				this._domElement.insertBefore(arg.domElement, this._domElement.childNodes[i].nextSibling);
+			}
+		}
+	}]);
+
+	return Elements;
+})();
+//# sourceMappingURL=pico.js.map
