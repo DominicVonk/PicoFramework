@@ -9,7 +9,6 @@ Pico.UI.Window = class Window extends Pico.UI.Panel {
 		this._minimizeElement = document.createElement('pico');
 		this._minimizeElement.className = 'pico-minimize';
 		this._minimizeElement.innerHTML = '–︎';
-		document.body.appendChild(this._domElement);
 		this._domElement.className = 'pico-window';
 		this._domElement.appendChild(this._titleElement);
 		this._domElement.appendChild(this._minimizeElement);
@@ -79,9 +78,11 @@ Pico.UI.Window = class Window extends Pico.UI.Panel {
 	}
 	show() {
 		this.visible = true;
+		document.body.appendChild(this._domElement);
 	}
 	hide() {
 		this.visible = false;
+		document.body.removeChild(this._domElement);
 	}
 }
 		

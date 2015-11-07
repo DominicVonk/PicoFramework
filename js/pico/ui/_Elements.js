@@ -3,9 +3,12 @@ Pico.UI._Elements = class Elements {
 		this._array = [];
 		this._domElement = domElement;
 	}
-	add(arg) {
-		this._array.push(arg);
-		this._domElement.appendChild(arg.domElement);
+	add(...arg) {
+		
+		for(var i = 0; i < arg.length; i++) {
+			this._array.push(arg[i]);
+			this._domElement.appendChild(arg[i].domElement);
+		}
 	}
 	get(i) {
 		return this.array[i];
@@ -20,12 +23,16 @@ Pico.UI._Elements = class Elements {
 		this._domElement.removeChild(item.domElement);
 		return item;
 	}
-	addAt(i, arg) {
+	addAt(i, ...arg) {
 		var item = this._array.splice(i, 0, arg);
 		if (this._domElement.childNodes[i] === this._domElement.lastChild) {
-			this._domElement.appendChild(arg.domElement);
+			for(var i = 0; i < arg.length; i++) {
+				this._domElement.appendChild(arg[i].domElement);
+			}
 		} else {
-			this._domElement.insertBefore(arg.domElement, this._domElement.childNodes[i].nextSibling);
+			for(var i = 0; i < arg.length; i++) {
+				this._domElement.insertBefore(arg[i].domElement, this._domElement.childNodes[i].nextSibling);
+			}
 		}
 	}
 }

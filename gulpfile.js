@@ -17,3 +17,4 @@ gulp.task("build", function () {
 gulp.task("watch", ['build'], function() {
      gulp.watch('js/pico/**/*.js', ['build']);
 });
+gulp.task("default", ['build', 'watch']);

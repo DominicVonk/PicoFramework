@@ -237,5 +237,6 @@ Pico.Colors = {
 	YellowGreen: new Pico.Color('#9ACD32'),
 	Transparent: new Pico.Color(0, 0, 0, 0),
 	PicoWindow: new Pico.Color(40,40,40,100),
-	PicoText: new Pico.Color(240, 240, 240, 100)
+	PicoText: new Pico.Color(240, 240, 240, 100),
+	PicoLink: new Pico.Color(64, 164, 255)
 };

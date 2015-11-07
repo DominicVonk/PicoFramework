@@ -277,7 +277,8 @@ Pico.Colors = {
 	YellowGreen: new Pico.Color('#9ACD32'),
 	Transparent: new Pico.Color(0, 0, 0, 0),
 	PicoWindow: new Pico.Color(40, 40, 40, 100),
-	PicoText: new Pico.Color(240, 240, 240, 100)
+	PicoText: new Pico.Color(240, 240, 240, 100),
+	PicoLink: new Pico.Color(64, 164, 255)
 };
 Pico.Cursor = (function () {
 	function Cursor(name, noImage) {
@@ -629,20 +630,52 @@ Pico.UI.Label = (function (_Pico$UI$PicoObject) {
 
 	return Label;
 })(Pico.UI.PicoObject);
+Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
+	_inherits(LinkLabel, _Pico$UI$Label);
+
+	function LinkLabel(text, link) {
+		_classCallCheck(this, LinkLabel);
+
+		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkLabel).call(this, text));
+
+		_this2._href = link;
+		_this2.foreground = Pico.Colors.PicoLink;
+		var oldfont = _this2.font;
+		oldfont.underline = true;
+		_this2.font = oldfont;
+		var obj = _this2;
+		_this2._domElement.addEventListener('click', function (e) {
+			window.open(obj._href, 'new');
+		});
+		return _this2;
+	}
+
+	_createClass(LinkLabel, [{
+		key: 'href',
+		set: function set(href) {
+			this._href = href;
+		},
+		get: function get() {
+			return this._href;
+		}
+	}]);
+
+	return LinkLabel;
+})(Pico.UI.Label);
 Pico.UI.Panel = (function (_Pico$UI$PicoObject2) {
 	_inherits(Panel, _Pico$UI$PicoObject2);
 
 	function Panel() {
 		_classCallCheck(this, Panel);
 
-		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
+		var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
 
-		_this2._domElements = document.createElement('pico');
-		_this2._domElements.className = 'pico-elements';
-		_this2._domElement.appendChild(_this2._domElements);
-		_this2._domElement.className = 'pico-panel';
-		_this2._elements = new Pico.UI._Elements(_this2._domElements);
-		return _this2;
+		_this3._domElements = document.createElement('pico');
+		_this3._domElements.className = 'pico-elements';
+		_this3._domElement.appendChild(_this3._domElements);
+		_this3._domElement.className = 'pico-panel';
+		_this3._elements = new Pico.UI._Elements(_this3._domElements);
+		return _this3;
 	}
 
 	_createClass(Panel, [{
@@ -660,25 +693,24 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 	function Window(title) {
 		_classCallCheck(this, Window);
 
-		var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
+		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
 
-		_this3.visible = false;
-		_this3._title = title === undefined ? '' : title;
-		_this3._titleElement = document.createElement('pico');
-		_this3._titleElement.className = 'pico-window-title';
-		_this3._titleElement.innerHTML = _this3._title;
-		_this3._minimizeElement = document.createElement('pico');
-		_this3._minimizeElement.className = 'pico-minimize';
-		_this3._minimizeElement.innerHTML = '–︎';
-		document.body.appendChild(_this3._domElement);
-		_this3._domElement.className = 'pico-window';
-		_this3._domElement.appendChild(_this3._titleElement);
-		_this3._domElement.appendChild(_this3._minimizeElement);
+		_this4.visible = false;
+		_this4._title = title === undefined ? '' : title;
+		_this4._titleElement = document.createElement('pico');
+		_this4._titleElement.className = 'pico-window-title';
+		_this4._titleElement.innerHTML = _this4._title;
+		_this4._minimizeElement = document.createElement('pico');
+		_this4._minimizeElement.className = 'pico-minimize';
+		_this4._minimizeElement.innerHTML = '–︎';
+		_this4._domElement.className = 'pico-window';
+		_this4._domElement.appendChild(_this4._titleElement);
+		_this4._domElement.appendChild(_this4._minimizeElement);
 		var diff = {};
 		var move = false;
 		var open = true;
-		var obj = _this3;
-		_this3._minimizeElement.addEventListener('click', function (e) {
+		var obj = _this4;
+		_this4._minimizeElement.addEventListener('click', function (e) {
 			if (!open) {
 				e.target.innerHTML = '–︎';
 				obj._domElement.style.height = obj.size.height + 'px';
@@ -693,12 +725,12 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 			}
 			open = !open;
 		});
-		_this3._titleElement.addEventListener('mousedown', function (e) {
+		_this4._titleElement.addEventListener('mousedown', function (e) {
 			diff.x = e.offsetX;
 			diff.y = e.offsetY;
 			move = true;
 		});
-		var obj = _this3;
+		var obj = _this4;
 		window.addEventListener('mousemove', function (e) {
 			if (move) {
 				var x = e.pageX;
@@ -730,18 +762,20 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 		window.addEventListener('mouseup', function () {
 			move = false;
 		});
-		return _this3;
+		return _this4;
 	}
 
 	_createClass(Window, [{
 		key: 'show',
 		value: function show() {
 			this.visible = true;
+			document.body.appendChild(this._domElement);
 		}
 	}, {
 		key: 'hide',
 		value: function hide() {
 			this.visible = false;
+			document.body.removeChild(this._domElement);
 		}
 	}, {
 		key: 'title',
@@ -767,9 +801,15 @@ Pico.UI._Elements = (function () {
 
 	_createClass(Elements, [{
 		key: 'add',
-		value: function add(arg) {
-			this._array.push(arg);
-			this._domElement.appendChild(arg.domElement);
+		value: function add() {
+			for (var _len = arguments.length, arg = Array(_len), _key = 0; _key < _len; _key++) {
+				arg[_key] = arguments[_key];
+			}
+
+			for (var i = 0; i < arg.length; i++) {
+				this._array.push(arg[i]);
+				this._domElement.appendChild(arg[i].domElement);
+			}
 		}
 	}, {
 		key: 'get',
@@ -792,12 +832,20 @@ Pico.UI._Elements = (function () {
 		}
 	}, {
 		key: 'addAt',
-		value: function addAt(i, arg) {
+		value: function addAt(i) {
+			for (var _len2 = arguments.length, arg = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+				arg[_key2 - 1] = arguments[_key2];
+			}
+
 			var item = this._array.splice(i, 0, arg);
 			if (this._domElement.childNodes[i] === this._domElement.lastChild) {
-				this._domElement.appendChild(arg.domElement);
+				for (var i = 0; i < arg.length; i++) {
+					this._domElement.appendChild(arg[i].domElement);
+				}
 			} else {
-				this._domElement.insertBefore(arg.domElement, this._domElement.childNodes[i].nextSibling);
+				for (var i = 0; i < arg.length; i++) {
+					this._domElement.insertBefore(arg[i].domElement, this._domElement.childNodes[i].nextSibling);
+				}
 			}
 		}
 	}]);

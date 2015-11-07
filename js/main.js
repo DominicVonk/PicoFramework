@@ -1,7 +1,7 @@
 var obj = new Pico.UI.Label('boo');
 var win = new Pico.UI.Window('Title');
-
-win.elements.add(obj);
+var link = new Pico.UI.LinkLabel('google', 'http://www.google.nl');
+win.elements.add(obj, link);
 win.size = new Pico.Size(100,100);
 win.position = new Pico.Position(200, 201);
 win.show();
