@@ -26,7 +26,7 @@ Pico.UI.PicoObject = class PicoObject {
 		this._domElement.style.backgroundColor = this._background.toRgba();
 	}
 	get background() {
-		return this._background;
+		return Object.create(this._background);
 	}
 
 	set foreground(color) {
@@ -38,7 +38,7 @@ Pico.UI.PicoObject = class PicoObject {
 		this._domElement.style.color = this._foreground.toRgba();
 	}
 	get foreground() {
-		return this._foreground;
+		return Object.create(this._foreground);
 	}
 
 	set cursor(cursor) {
@@ -48,7 +48,7 @@ Pico.UI.PicoObject = class PicoObject {
 		}
 	}
 	get cursor() {
-		return this._cursor;
+		return Object.create(this._cursor);
 	}
 
 	set position(position) {
@@ -59,7 +59,7 @@ Pico.UI.PicoObject = class PicoObject {
 		}
 	}
 	get position() {
-		return this._position;
+		return Object.create(this._position);
 	}
 
 	set size(size) {
@@ -70,7 +70,7 @@ Pico.UI.PicoObject = class PicoObject {
 		}
 	}
 	get size() {
-		return this._size;
+		return Object.create(this._size);
 	}
 
 	set visible(visible) {

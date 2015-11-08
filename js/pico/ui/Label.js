@@ -24,7 +24,7 @@ Pico.UI.Label = class Label extends Pico.UI.PicoObject {
 		}
 	}
 	get font() {
-		return this._font;
+		return Object.create(this._font);
 	}
 
 	set text(text) {

@@ -8,7 +8,7 @@ Pico.UI.Panel = class Panel extends Pico.UI.PicoObject {
 		this._elements = new Pico.UI._Elements(this._domElements);
 	}
 	get elements() {
-		return this._elements;
+		return Object.create(this._elements);
 	}
 
 }

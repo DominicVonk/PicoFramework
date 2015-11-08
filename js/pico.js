@@ -1,5 +1,9 @@
 'use strict';
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _set = function set(object, property, value, receiver) { var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent !== null) { set(parent, property, value, receiver); } } else if ("value" in desc && desc.writable) { desc.value = value; } else { var setter = desc.set; if (setter !== undefined) { setter.call(receiver, value); } } return value; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -9,6 +13,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _instanceof(left, right) { if (right != null && right[Symbol.hasInstance]) { return right[Symbol.hasInstance](left); } else { return left instanceof right; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+if (!Object.create) {
+	Object.create = function (proto) {
+		function F() {}
+		F.prototype = proto;
+		return new F();
+	};
+}
 
 var Pico = {
 	UI: {}
@@ -480,6 +492,12 @@ Pico.Size = (function () {
 
 	return Size;
 })();
+Pico.SizeMode = {
+	Normal: 1,
+	Cover: 2,
+	Contain: 3,
+	Stretch: 4
+};
 Pico.UI.PicoObject = (function () {
 	function PicoObject() {
 		_classCallCheck(this, PicoObject);
@@ -512,7 +530,7 @@ Pico.UI.PicoObject = (function () {
 			this._domElement.style.backgroundColor = this._background.toRgba();
 		},
 		get: function get() {
-			return this._background;
+			return Object.create(this._background);
 		}
 	}, {
 		key: 'foreground',
@@ -525,7 +543,7 @@ Pico.UI.PicoObject = (function () {
 			this._domElement.style.color = this._foreground.toRgba();
 		},
 		get: function get() {
-			return this._foreground;
+			return Object.create(this._foreground);
 		}
 	}, {
 		key: 'cursor',
@@ -536,7 +554,7 @@ Pico.UI.PicoObject = (function () {
 			}
 		},
 		get: function get() {
-			return this._cursor;
+			return Object.create(this._cursor);
 		}
 	}, {
 		key: 'position',
@@ -548,7 +566,7 @@ Pico.UI.PicoObject = (function () {
 			}
 		},
 		get: function get() {
-			return this._position;
+			return Object.create(this._position);
 		}
 	}, {
 		key: 'size',
@@ -560,7 +578,7 @@ Pico.UI.PicoObject = (function () {
 			}
 		},
 		get: function get() {
-			return this._size;
+			return Object.create(this._size);
 		}
 	}, {
 		key: 'visible',
@@ -615,7 +633,7 @@ Pico.UI.Label = (function (_Pico$UI$PicoObject) {
 			}
 		},
 		get: function get() {
-			return this._font;
+			return Object.create(this._font);
 		}
 	}, {
 		key: 'text',
@@ -681,11 +699,69 @@ Pico.UI.Panel = (function (_Pico$UI$PicoObject2) {
 	_createClass(Panel, [{
 		key: 'elements',
 		get: function get() {
-			return this._elements;
+			return Object.create(this._elements);
 		}
 	}]);
 
 	return Panel;
+})(Pico.UI.PicoObject);
+Pico.UI.Picture = (function (_Pico$UI$PicoObject3) {
+	_inherits(Picture, _Pico$UI$PicoObject3);
+
+	function Picture(image) {
+		_classCallCheck(this, Picture);
+
+		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(Picture).call(this));
+
+		_this4._image = image;
+		_this4._sizeMode = Pico.SizeMode.Normal;
+		_this4._domElement.className = 'pico-picture';
+		_this4._domElement.style.backgroundImage = 'url(' + _this4._image + ')';
+		return _this4;
+	}
+
+	_createClass(Picture, [{
+		key: 'image',
+		set: function set(image) {
+			this._image = image;
+			this._domElement.style.backgroundImage = 'url(' + image + ')';
+		},
+		get: function get() {
+			return this._image;
+		}
+	}, {
+		key: 'size',
+		set: function set(size) {
+			_set(Object.getPrototypeOf(Picture.prototype), 'size', size, this);
+			if (this._sizeMode === Pico.SizeMode.Normal) {
+				this._domElement.style.webkitBackgroundSize = '';
+				this._domElement.style.backgroundSize = '';
+			} else if (this._sizeMode === Pico.SizeMode.Cover) {
+				this._domElement.style.webkitBackgroundSize = 'cover';
+				this._domElement.style.backgroundSize = 'cover';
+			} else if (this._sizeMode === Pico.SizeMode.Contain) {
+				this._domElement.style.webkitBackgroundSize = 'contain';
+				this._domElement.style.backgroundSize = 'contain';
+			} else if (this._sizeMode === Pico.SizeMode.Stretch) {
+				this._domElement.style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
+				this._domElement.style.backgroundSize = size.width + 'px ' + size.height + 'px';
+			}
+		},
+		get: function get() {
+			return _get(Object.getPrototypeOf(Picture.prototype), 'size', this);
+		}
+	}, {
+		key: 'sizeMode',
+		set: function set(sizeMode) {
+			this._sizeMode = sizeMode;
+			this.size = this.size;
+		},
+		get: function get() {
+			return this._sizeMode;
+		}
+	}]);
+
+	return Picture;
 })(Pico.UI.PicoObject);
 Pico.UI.Window = (function (_Pico$UI$Panel) {
 	_inherits(Window, _Pico$UI$Panel);
@@ -693,24 +769,24 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 	function Window(title) {
 		_classCallCheck(this, Window);
 
-		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
+		var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
 
-		_this4.visible = false;
-		_this4._title = title === undefined ? '' : title;
-		_this4._titleElement = document.createElement('pico');
-		_this4._titleElement.className = 'pico-window-title';
-		_this4._titleElement.innerHTML = _this4._title;
-		_this4._minimizeElement = document.createElement('pico');
-		_this4._minimizeElement.className = 'pico-minimize';
-		_this4._minimizeElement.innerHTML = '–︎';
-		_this4._domElement.className = 'pico-window';
-		_this4._domElement.appendChild(_this4._titleElement);
-		_this4._domElement.appendChild(_this4._minimizeElement);
+		_this5.visible = false;
+		_this5._title = title === undefined ? '' : title;
+		_this5._titleElement = document.createElement('pico');
+		_this5._titleElement.className = 'pico-window-title';
+		_this5._titleElement.innerHTML = _this5._title;
+		_this5._minimizeElement = document.createElement('pico');
+		_this5._minimizeElement.className = 'pico-minimize';
+		_this5._minimizeElement.innerHTML = '–︎';
+		_this5._domElement.className = 'pico-window';
+		_this5._domElement.appendChild(_this5._titleElement);
+		_this5._domElement.appendChild(_this5._minimizeElement);
 		var diff = {};
 		var move = false;
 		var open = true;
-		var obj = _this4;
-		_this4._minimizeElement.addEventListener('click', function (e) {
+		var obj = _this5;
+		_this5._minimizeElement.addEventListener('click', function (e) {
 			if (!open) {
 				e.target.innerHTML = '–︎';
 				obj._domElement.style.height = obj.size.height + 'px';
@@ -725,12 +801,12 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 			}
 			open = !open;
 		});
-		_this4._titleElement.addEventListener('mousedown', function (e) {
+		_this5._titleElement.addEventListener('mousedown', function (e) {
 			diff.x = e.offsetX;
 			diff.y = e.offsetY;
 			move = true;
 		});
-		var obj = _this4;
+		var obj = _this5;
 		window.addEventListener('mousemove', function (e) {
 			if (move) {
 				var x = e.pageX;
@@ -762,7 +838,7 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 		window.addEventListener('mouseup', function () {
 			move = false;
 		});
-		return _this4;
+		return _this5;
 	}
 
 	_createClass(Window, [{

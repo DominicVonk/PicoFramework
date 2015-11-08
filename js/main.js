@@ -1,10 +1,14 @@
 var obj = new Pico.UI.Label('boo');
 var win = new Pico.UI.Window('Title');
 var link = new Pico.UI.LinkLabel('google', 'http://www.google.nl');
-win.elements.add(obj, link);
-win.size = new Pico.Size(100,100);
+var pic = new Pico.UI.Picture('img/cappuccino.jpg');
+win.elements.add(obj, link, pic);
+win.size = new Pico.Size(300,300);
 win.position = new Pico.Position(200, 201);
 win.show();
 obj.visible = true;
 obj.size = new Pico.Size(20, 20);
 obj.position = new Pico.Position(10, 10);
+pic.position = new Pico.Position(50,50);
+pic.size = new Pico.Size(50, 50);
+pic.sizeMode = Pico.SizeMode.Cover;
