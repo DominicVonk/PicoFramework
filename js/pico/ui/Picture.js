@@ -1,29 +1,15 @@
-Pico.UI.Picture = class Picture extends Pico.UI.PicoObject {
+Pico.UI.Picture = class Picture extends Pico.UI.Control {
 	constructor(image) {
 		super();
 		this._image = image;
 		this._sizeMode = Pico.SizeMode.Normal;
+		this._imageRepeat = true;
 		this._domElement.className = 'pico-picture';
 		this._domElement.style.backgroundImage = 'url(' + this._image + ')';
 		this._alignMode = Pico.AlignMode.Left;
 		this._verticalAlignMode = Pico.VerticalAlignMode.Top;
-		var vString = '';
-		var hString = '';
-		if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
-			vString = 'top';
-		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
-			vString = 'center';
-		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
-			vString = 'bottom';
-		}
-		if (this._alignMode === Pico.AlignMode.Left) {
-			hString = 'left';
-		} else if (this._alignMode === Pico.AlignMode.Center) {
-			hString = 'center';
-		} else if (this._alignMode === Pico.AlignMode.Right) {
-			hString = 'right';
-		} 
-		this._domElement.style.backgroundPosition = vString + ' ' + hString;
+		this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+		this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
 	}
 	set image (image) {
 		this._image = image;
@@ -60,48 +46,23 @@ Pico.UI.Picture = class Picture extends Pico.UI.PicoObject {
 	}
 	set alignMode (alignMode) {
 		this._alignMode = alignMode;
-		var vString = '';
-		var hString = '';
-		if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
-			vString = 'top';
-		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
-			vString = 'center';
-		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
-			vString = 'bottom';
-		}
-		if (this._alignMode === Pico.AlignMode.Left) {
-			hString = 'left';
-		} else if (this._alignMode === Pico.AlignMode.Center) {
-			hString = 'center';
-		} else if (this._alignMode === Pico.AlignMode.Right) {
-			hString = 'right';
-		} 
-		this._domElement.style.backgroundPosition = vString + ' ' + hString;
+		this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
 	}
 	get alignMode () {
 		return this._alignMode;
 	}
 	set verticalAlignMode(verticalAlignMode) {
 		this._verticalAlignMode = verticalAlignMode;
-		var vString = '';
-		var hString = '';
-		if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
-			vString = 'top';
-		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
-			vString = 'center';
-		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
-			vString = 'bottom';
-		}
-		if (this._alignMode === Pico.AlignMode.Left) {
-			hString = 'left';
-		} else if (this._alignMode === Pico.AlignMode.Center) {
-			hString = 'center';
-		} else if (this._alignMode === Pico.AlignMode.Right) {
-			hString = 'right';
-		} 
-		this._domElement.style.backgroundPosition = vString + ' ' + hString;
+		this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
 	}
 	get verticalAlignMode() {
 		return this._verticalAlignMode;
+	}
+	set imageRepeat(imageRepeat) {
+		this._imageRepeat = imageRepeat;
+		this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
+	}
+	get imageRepeat() {
+		return this._imageRepeat;
 	}
 };

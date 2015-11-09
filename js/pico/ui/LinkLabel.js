@@ -6,6 +6,7 @@ Pico.UI.LinkLabel = class LinkLabel extends Pico.UI.Label {
 		var oldfont = this.font;
 		oldfont.underline = true;
 		this.font = oldfont;
+		this.cursor = Pico.Cursors.Pointer;
 		var obj = this;
 		this._domElement.addEventListener('click', function(e) {
 			window.open(obj._href, 'new');

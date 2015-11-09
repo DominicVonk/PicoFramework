@@ -1,4 +1,4 @@
-Pico.UI.Label = class Label extends Pico.UI.PicoObject {
+Pico.UI.Label = class Label extends Pico.UI.Control {
 	constructor(text) {
 		super();
 		this._text = text === undefined ? '' : text;
@@ -12,13 +12,7 @@ Pico.UI.Label = class Label extends Pico.UI.PicoObject {
 		this._domElement.style.textDecoration = cssArgs.textDecoration;
 		this._domElement.style.fontStyle = cssArgs.fontStyle;
 		this._domElement.style.fontFamily = cssArgs.fontFamily;
-		if (this._alignMode === Pico.AlignMode.Left) {
-			this._domElement.style.textAlign = 'left';
-		} else if (this._alignMode === Pico.AlignMode.Center) {
-			this._domElement.style.textAlign = 'center';
-		} else if (this._alignMode === Pico.AlignMode.Right) {
-			this._domElement.style.textAlign = 'right';
-		}
+		this._domElement.style.textAlign = this._alignMode;
 	}
 	set font(font) {
 		if (font instanceof Pico.Font) {
@@ -45,13 +39,7 @@ Pico.UI.Label = class Label extends Pico.UI.PicoObject {
 
 	set alignMode(alignMode) {
 		this._alignMode = alignMode;
-		if (this._alignMode === Pico.AlignMode.Left) {
-			this._domElement.style.textAlign = 'left';
-		} else if (this._alignMode === Pico.AlignMode.Center) {
-			this._domElement.style.textAlign = 'center';
-		} else if (this._alignMode === Pico.AlignMode.Right) {
-			this._domElement.style.textAlign = 'right';
-		}
+		this._domElement.style.textAlign = this._alignMode;
 	}
 
 	get alignMode() {

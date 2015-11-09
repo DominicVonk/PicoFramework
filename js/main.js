@@ -1,16 +1,24 @@
-var obj = new Pico.UI.Label('boo');
-var win = new Pico.UI.Window('Title');
-var link = new Pico.UI.LinkLabel('google', 'http://www.google.nl');
-var pic = new Pico.UI.Picture('img/cappuccino.jpg');
-win.elements.add(obj, link, pic);
-win.size = new Pico.Size(300,300);
-win.position = new Pico.Position(200, 201);
-win.show();
-obj.visible = true;
-obj.size = new Pico.Size(20, 20);
-obj.position = new Pico.Position(10, 10);
-pic.position = new Pico.Position(50,50);
-pic.size = new Pico.Size(50, 50);
-pic.sizeMode = Pico.SizeMode.Cover;
-pic.verticalAlignMode = Pico.VerticalAlignMode.Center;
-pic.alignMode = Pico.AlignMode.Center;
+var mainForm = new Pico.UI.Window('MainForm');
+mainForm.size = new Pico.Size(300,300);
+mainForm.position = new Pico.Position(40, 40);
+var label = new Pico.UI.Label('Boo');
+label.size = new Pico.Size(40, 20);
+label.position = new Pico.Position(20, 20);
+
+
+var linkLabel = new Pico.UI.LinkLabel('google', 'http://www.google.nl');
+linkLabel.size = new Pico.Size(60, 20);
+linkLabel.position = new Pico.Position(20, 40);
+
+
+var picture = new Pico.UI.Picture('img/cappuccino.jpg');
+picture.size = new Pico.Size(80, 80);
+picture.position = new Pico.Position(100, 100);
+picture.sizeMode = Pico.SizeMode.Cover;
+picture.verticalAlignMode = Pico.VerticalAlignMode.Center;
+picture.alignMode = Pico.AlignMode.Center;
+picture.eventClick.add(function() {
+	alert('clicked');
+});
+mainForm.elements.add(label, linkLabel, picture);
+mainForm.show();

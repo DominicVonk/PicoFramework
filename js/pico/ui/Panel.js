@@ -1,4 +1,4 @@
-Pico.UI.Panel = class Panel extends Pico.UI.PicoObject {
+Pico.UI.Panel = class Panel extends Pico.UI.Control {
 	constructor() {
 		super();
 		this._domElements = document.createElement('pico');
@@ -8,7 +8,7 @@ Pico.UI.Panel = class Panel extends Pico.UI.PicoObject {
 		this._elements = new Pico.UI._Elements(this._domElements);
 	}
 	get elements() {
-		return Object.create(this._elements);
+		return this._elements;
 	}
 
 }
