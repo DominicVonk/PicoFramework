@@ -5,6 +5,25 @@ Pico.UI.Picture = class Picture extends Pico.UI.PicoObject {
 		this._sizeMode = Pico.SizeMode.Normal;
 		this._domElement.className = 'pico-picture';
 		this._domElement.style.backgroundImage = 'url(' + this._image + ')';
+		this._alignMode = Pico.AlignMode.Left;
+		this._verticalAlignMode = Pico.VerticalAlignMode.Top;
+		var vString = '';
+		var hString = '';
+		if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
+			vString = 'top';
+		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
+			vString = 'center';
+		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
+			vString = 'bottom';
+		}
+		if (this._alignMode === Pico.AlignMode.Left) {
+			hString = 'left';
+		} else if (this._alignMode === Pico.AlignMode.Center) {
+			hString = 'center';
+		} else if (this._alignMode === Pico.AlignMode.Right) {
+			hString = 'right';
+		} 
+		this._domElement.style.backgroundPosition = vString + ' ' + hString;
 	}
 	set image (image) {
 		this._image = image;
@@ -38,5 +57,51 @@ Pico.UI.Picture = class Picture extends Pico.UI.PicoObject {
 	}
 	get sizeMode () {
 		return this._sizeMode;
+	}
+	set alignMode (alignMode) {
+		this._alignMode = alignMode;
+		var vString = '';
+		var hString = '';
+		if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
+			vString = 'top';
+		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
+			vString = 'center';
+		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
+			vString = 'bottom';
+		}
+		if (this._alignMode === Pico.AlignMode.Left) {
+			hString = 'left';
+		} else if (this._alignMode === Pico.AlignMode.Center) {
+			hString = 'center';
+		} else if (this._alignMode === Pico.AlignMode.Right) {
+			hString = 'right';
+		} 
+		this._domElement.style.backgroundPosition = vString + ' ' + hString;
+	}
+	get alignMode () {
+		return this._alignMode;
+	}
+	set verticalAlignMode(verticalAlignMode) {
+		this._verticalAlignMode = verticalAlignMode;
+		var vString = '';
+		var hString = '';
+		if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
+			vString = 'top';
+		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
+			vString = 'center';
+		} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
+			vString = 'bottom';
+		}
+		if (this._alignMode === Pico.AlignMode.Left) {
+			hString = 'left';
+		} else if (this._alignMode === Pico.AlignMode.Center) {
+			hString = 'center';
+		} else if (this._alignMode === Pico.AlignMode.Right) {
+			hString = 'right';
+		} 
+		this._domElement.style.backgroundPosition = vString + ' ' + hString;
+	}
+	get verticalAlignMode() {
+		return this._verticalAlignMode;
 	}
 };

@@ -15,6 +15,7 @@ Pico.UI.PicoObject = class PicoObject {
 		this._domElement.style.backgroundColor = this._background.toRgba();
 		this._domElement.style.color = this._foreground.toRgba();
 		this._domElement.style.cursor = this._cursor.style;
+		this._domElement.style.overflow = 'hidden';
 	}
 
 	set background(color) {

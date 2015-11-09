@@ -25,6 +25,16 @@ if (!Object.create) {
 var Pico = {
 	UI: {}
 };
+Pico.AlignMode = {
+	Left: 0,
+	Center: 1,
+	Right: 2
+};
+Pico.VerticalAlignMode = {
+	Top: 0,
+	Center: 1,
+	Bottom: 2
+};
 Pico.Color = (function () {
 	function Color(red, green, blue, alpha) {
 		_classCallCheck(this, Color);
@@ -517,6 +527,7 @@ Pico.UI.PicoObject = (function () {
 		this._domElement.style.backgroundColor = this._background.toRgba();
 		this._domElement.style.color = this._foreground.toRgba();
 		this._domElement.style.cursor = this._cursor.style;
+		this._domElement.style.overflow = 'hidden';
 	}
 
 	_createClass(PicoObject, [{
@@ -610,12 +621,20 @@ Pico.UI.Label = (function (_Pico$UI$PicoObject) {
 		_this._domElement.className = 'pico-label';
 		_this._domElement.innerHTML = _this._text;
 		_this._font = new Pico.Font();
+		_this._alignMode = Pico.AlignMode.Left;
 		var cssArgs = _this._font.toCSSArgs();
 		_this._domElement.style.fontSize = cssArgs.fontSize;
 		_this._domElement.style.fontWeight = cssArgs.fontWeight;
 		_this._domElement.style.textDecoration = cssArgs.textDecoration;
 		_this._domElement.style.fontStyle = cssArgs.fontStyle;
 		_this._domElement.style.fontFamily = cssArgs.fontFamily;
+		if (_this._alignMode === Pico.AlignMode.Left) {
+			_this._domElement.style.textAlign = 'left';
+		} else if (_this._alignMode === Pico.AlignMode.Center) {
+			_this._domElement.style.textAlign = 'center';
+		} else if (_this._alignMode === Pico.AlignMode.Right) {
+			_this._domElement.style.textAlign = 'right';
+		}
 		return _this;
 	}
 
@@ -643,6 +662,21 @@ Pico.UI.Label = (function (_Pico$UI$PicoObject) {
 		},
 		get: function get() {
 			return this._text;
+		}
+	}, {
+		key: 'alignMode',
+		set: function set(alignMode) {
+			this._alignMode = alignMode;
+			if (this._alignMode === Pico.AlignMode.Left) {
+				this._domElement.style.textAlign = 'left';
+			} else if (this._alignMode === Pico.AlignMode.Center) {
+				this._domElement.style.textAlign = 'center';
+			} else if (this._alignMode === Pico.AlignMode.Right) {
+				this._domElement.style.textAlign = 'right';
+			}
+		},
+		get: function get() {
+			return this._alignMode;
 		}
 	}]);
 
@@ -717,6 +751,25 @@ Pico.UI.Picture = (function (_Pico$UI$PicoObject3) {
 		_this4._sizeMode = Pico.SizeMode.Normal;
 		_this4._domElement.className = 'pico-picture';
 		_this4._domElement.style.backgroundImage = 'url(' + _this4._image + ')';
+		_this4._alignMode = Pico.AlignMode.Left;
+		_this4._verticalAlignMode = Pico.VerticalAlignMode.Top;
+		var vString = '';
+		var hString = '';
+		if (_this4._verticalAlignMode === Pico.VerticalAlignMode.Top) {
+			vString = 'top';
+		} else if (_this4._verticalAlignMode === Pico.VerticalAlignMode.Center) {
+			vString = 'center';
+		} else if (_this4._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
+			vString = 'bottom';
+		}
+		if (_this4._alignMode === Pico.AlignMode.Left) {
+			hString = 'left';
+		} else if (_this4._alignMode === Pico.AlignMode.Center) {
+			hString = 'center';
+		} else if (_this4._alignMode === Pico.AlignMode.Right) {
+			hString = 'right';
+		}
+		_this4._domElement.style.backgroundPosition = vString + ' ' + hString;
 		return _this4;
 	}
 
@@ -758,6 +811,56 @@ Pico.UI.Picture = (function (_Pico$UI$PicoObject3) {
 		},
 		get: function get() {
 			return this._sizeMode;
+		}
+	}, {
+		key: 'alignMode',
+		set: function set(alignMode) {
+			this._alignMode = alignMode;
+			var vString = '';
+			var hString = '';
+			if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
+				vString = 'top';
+			} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
+				vString = 'center';
+			} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
+				vString = 'bottom';
+			}
+			if (this._alignMode === Pico.AlignMode.Left) {
+				hString = 'left';
+			} else if (this._alignMode === Pico.AlignMode.Center) {
+				hString = 'center';
+			} else if (this._alignMode === Pico.AlignMode.Right) {
+				hString = 'right';
+			}
+			this._domElement.style.backgroundPosition = vString + ' ' + hString;
+		},
+		get: function get() {
+			return this._alignMode;
+		}
+	}, {
+		key: 'verticalAlignMode',
+		set: function set(verticalAlignMode) {
+			this._verticalAlignMode = verticalAlignMode;
+			var vString = '';
+			var hString = '';
+			if (this._verticalAlignMode === Pico.VerticalAlignMode.Top) {
+				vString = 'top';
+			} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Center) {
+				vString = 'center';
+			} else if (this._verticalAlignMode === Pico.VerticalAlignMode.Bottom) {
+				vString = 'bottom';
+			}
+			if (this._alignMode === Pico.AlignMode.Left) {
+				hString = 'left';
+			} else if (this._alignMode === Pico.AlignMode.Center) {
+				hString = 'center';
+			} else if (this._alignMode === Pico.AlignMode.Right) {
+				hString = 'right';
+			}
+			this._domElement.style.backgroundPosition = vString + ' ' + hString;
+		},
+		get: function get() {
+			return this._verticalAlignMode;
 		}
 	}]);
 

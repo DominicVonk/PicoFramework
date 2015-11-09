@@ -12,3 +12,5 @@ obj.position = new Pico.Position(10, 10);
 pic.position = new Pico.Position(50,50);
 pic.size = new Pico.Size(50, 50);
 pic.sizeMode = Pico.SizeMode.Cover;
+pic.verticalAlignMode = Pico.VerticalAlignMode.Center;
+pic.alignMode = Pico.AlignMode.Center;
