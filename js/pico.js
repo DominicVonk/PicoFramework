@@ -383,7 +383,7 @@ Pico.FontStyle = {
 Pico.Font = (function () {
 	function Font() {
 		var family = arguments.length <= 0 || arguments[0] === undefined ? 'Arial' : arguments[0];
-		var size = arguments.length <= 1 || arguments[1] === undefined ? 14 : arguments[1];
+		var size = arguments.length <= 1 || arguments[1] === undefined ? 12 : arguments[1];
 		var type = arguments.length <= 2 || arguments[2] === undefined ? Pico.FontStyle.Normal : arguments[2];
 		var underline = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 
@@ -446,18 +446,167 @@ Pico.Font = (function () {
 
 	return Font;
 })();
+Pico.Margin = (function () {
+	function Margin(top, left, bottom, right, picoObject) {
+		_classCallCheck(this, Margin);
+
+		this._top = top;
+		if (typeof left !== "undefined") {
+			this._left = left;
+			this._bottom = bottom;
+			this._right = right;
+		} else {
+			this._left = top;
+			this._bottom = top;
+			this._right = top;
+		}
+
+		if (typeof picoObject !== "undefined") {
+			this._picoObject = picoObject;
+		}
+		this.apply();
+	}
+
+	_createClass(Margin, [{
+		key: 'apply',
+		value: function apply() {
+			if (typeof this._picoObject !== "undefined") {
+				this._picoObject.domElement.style.margin = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
+			}
+		}
+	}, {
+		key: 'top',
+		set: function set(top) {
+			this._top = top;
+			this.apply();
+		},
+		get: function get() {
+			return this._top;
+		}
+	}, {
+		key: 'left',
+		set: function set(left) {
+			this._left = left;
+			this.apply();
+		},
+		get: function get() {
+			return this._left;
+		}
+	}, {
+		key: 'bottom',
+		set: function set(bottom) {
+			this._bottom = bottom;
+			this.apply();
+		},
+		get: function get() {
+			return this._bottom;
+		}
+	}, {
+		key: 'right',
+		set: function set(right) {
+			this._right = right;
+			this.apply();
+		},
+		get: function get() {
+			return this._right;
+		}
+	}]);
+
+	return Margin;
+})();
+Pico.Padding = (function () {
+	function Padding(top, left, bottom, right, picoObject) {
+		_classCallCheck(this, Padding);
+
+		this._top = top;
+		if (typeof left !== "undefined") {
+			this._left = left;
+			this._bottom = bottom;
+			this._right = right;
+		} else {
+			this._left = top;
+			this._bottom = top;
+			this._right = top;
+		}
+
+		if (typeof picoObject !== "undefined") {
+			this._picoObject = picoObject;
+		}
+		this.apply();
+	}
+
+	_createClass(Padding, [{
+		key: 'apply',
+		value: function apply() {
+			if (typeof this._picoObject !== "undefined") {
+				this._picoObject.domElement.style.padding = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
+			}
+		}
+	}, {
+		key: 'top',
+		set: function set(top) {
+			this._top = top;
+			this.apply();
+		},
+		get: function get() {
+			return this._top;
+		}
+	}, {
+		key: 'left',
+		set: function set(left) {
+			this._left = left;
+			this.apply();
+		},
+		get: function get() {
+			return this._left;
+		}
+	}, {
+		key: 'bottom',
+		set: function set(bottom) {
+			this._bottom = bottom;
+			this.apply();
+		},
+		get: function get() {
+			return this._bottom;
+		}
+	}, {
+		key: 'right',
+		set: function set(right) {
+			this._right = right;
+			this.apply();
+		},
+		get: function get() {
+			return this._right;
+		}
+	}]);
+
+	return Padding;
+})();
 Pico.Position = (function () {
-	function Position(x, y) {
+	function Position(x, y, picoObject) {
 		_classCallCheck(this, Position);
 
 		this._x = x;
 		this._y = y;
+		if (typeof picoObject !== "undefined") {
+			this._picoObject = picoObject;
+		}
+		this.apply();
 	}
 
 	_createClass(Position, [{
+		key: 'apply',
+		value: function apply() {
+			if (typeof this._picoObject !== "undefined") {
+				this._picoObject.domElement.style.left = this._x + 'px';
+				this._picoObject.domElement.style.top = this._y + 'px';
+			}
+		}
+	}, {
 		key: 'x',
 		set: function set(x) {
 			this._x = x;
+			this.apply();
 		},
 		get: function get() {
 			return this._x;
@@ -466,6 +615,7 @@ Pico.Position = (function () {
 		key: 'y',
 		set: function set(y) {
 			this._y = y;
+			this.apply();
 		},
 		get: function get() {
 			return this._y;
@@ -475,17 +625,30 @@ Pico.Position = (function () {
 	return Position;
 })();
 Pico.Size = (function () {
-	function Size(width, height) {
+	function Size(width, height, picoObject) {
 		_classCallCheck(this, Size);
 
 		this._width = width;
 		this._height = height;
+		if (typeof picoObject !== "undefined") {
+			this._picoObject = picoObject;
+		}
+		this.apply();
 	}
 
 	_createClass(Size, [{
+		key: 'apply',
+		value: function apply() {
+			if (typeof this._picoObject !== "undefined") {
+				this._picoObject.domElement.style.height = this._height + 'px';
+				this._picoObject.domElement.style.width = this._width + 'px';
+			}
+		}
+	}, {
 		key: 'width',
 		set: function set(width) {
 			this._width = width;
+			this.apply();
 		},
 		get: function get() {
 			return this._width;
@@ -494,6 +657,7 @@ Pico.Size = (function () {
 		key: 'height',
 		set: function set(height) {
 			this._height = height;
+			this.apply();
 		},
 		get: function get() {
 			return this._height;
@@ -508,438 +672,6 @@ Pico.SizeMode = {
 	Contain: 3,
 	Stretch: 4
 };
-Pico.UI.Control = (function () {
-	function Control() {
-		_classCallCheck(this, Control);
-
-		this._size = new Pico.Size(0, 0);
-		this._position = new Pico.Position(0, 0);
-		this._visible = true;
-		this._cursor = Pico.Cursors.Default;
-		this._foreground = Pico.Colors.PicoText;
-		this._background = Pico.Colors.PicoWindow;
-		this._events = {};
-		this._listeners = {};
-		this._domElement = document.createElement('pico');
-		this._domElement.style.width = this._size.width + 'px';
-		this._domElement.style.height = this._size.height + 'px';
-		this._domElement.style.top = this._position.y + 'px';
-		this._domElement.style.left = this._position.x + 'px';
-		this._domElement.style.display = this._visible ? 'block' : 'none';
-		this._domElement.style.backgroundColor = this._background.toRgba();
-		this._domElement.style.color = this._foreground.toRgba();
-		this._domElement.style.cursor = this._cursor.style;
-		this._domElement.style.overflow = 'hidden';
-		this.eventClick = new Pico.UI._Event(this, 'click', true);
-		this.eventMouseDown = new Pico.UI._Event(this, 'mousedown', true);
-		this.eventMouseUp = new Pico.UI._Event(this, 'mouseup', true);
-		this.eventMouseMove = new Pico.UI._Event(this, 'mousemove', true);
-		this.eventMouseEnter = new Pico.UI._Event(this, 'mouseenter', true);
-		this.eventMouseLeave = new Pico.UI._Event(this, 'mouseleave', true);
-		this.eventResized = new Pico.UI._Event(this, 'resized', true);
-		this.eventBackgroundChanged = new Pico.UI._Event(this, 'backgroundChanged');
-		this.eventForegroundChanged = new Pico.UI._Event(this, 'foregroundChanged');
-		this.eventVisibleChanged = new Pico.UI._Event(this, 'visiblechanged');
-		this.eventMoved = new Pico.UI._Event(this, 'moved');
-	}
-
-	_createClass(Control, [{
-		key: 'background',
-		set: function set(color) {
-			if (_instanceof(color, Pico.Color)) {
-				this._background = color;
-			} else {
-				this._background = new Pico.Color(color);
-			}
-			this._domElement.style.backgroundColor = this._background.toRgba();
-			this.eventBackgroundChanged.trigger();
-		},
-		get: function get() {
-			return Object.create(this._background);
-		}
-	}, {
-		key: 'foreground',
-		set: function set(color) {
-			if (_instanceof(color, Pico.Color)) {
-				this._foreground = color;
-			} else {
-				this._foreground = new Pico.Color(color);
-			}
-			this._domElement.style.color = this._foreground.toRgba();
-			this.eventForegroundChanged.trigger();
-		},
-		get: function get() {
-			return Object.create(this._foreground);
-		}
-	}, {
-		key: 'cursor',
-		set: function set(cursor) {
-			if (_instanceof(cursor, Pico.Cursor)) {
-				this._cursor = cursor;
-				this._domElement.style.cursor = this._cursor.style;
-			}
-		},
-		get: function get() {
-			return Object.create(this._cursor);
-		}
-	}, {
-		key: 'position',
-		set: function set(position) {
-			if (_instanceof(position, Pico.Position)) {
-				this._position = position;
-				this._domElement.style.top = this._position.y + 'px';
-				this._domElement.style.left = this._position.x + 'px';
-				this.eventMoved.trigger();
-			}
-		},
-		get: function get() {
-			return Object.create(this._position);
-		}
-	}, {
-		key: 'size',
-		set: function set(size) {
-			if (_instanceof(size, Pico.Size)) {
-				this._size = size;
-				this._domElement.style.width = this._size.width + 'px';
-				this._domElement.style.height = this._size.height + 'px';
-				this.eventResized.trigger();
-			}
-		},
-		get: function get() {
-			return Object.create(this._size);
-		}
-	}, {
-		key: 'visible',
-		set: function set(visible) {
-			this._visible = visible;
-			this._domElement.style.display = this._visible ? 'block' : 'none';
-			this.eventVisibleChanged.trigger();
-		},
-		get: function get() {
-			return this._visible;
-		}
-	}, {
-		key: 'domElement',
-		get: function get() {
-			return this._domElement;
-		}
-	}]);
-
-	return Control;
-})();
-Pico.UI.Label = (function (_Pico$UI$Control) {
-	_inherits(Label, _Pico$UI$Control);
-
-	function Label(text) {
-		_classCallCheck(this, Label);
-
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Label).call(this));
-
-		_this._text = text === undefined ? '' : text;
-		_this._domElement.className = 'pico-label';
-		_this._domElement.innerHTML = _this._text;
-		_this._font = new Pico.Font();
-		_this._alignMode = Pico.AlignMode.Left;
-		var cssArgs = _this._font.toCSSArgs();
-		_this._domElement.style.fontSize = cssArgs.fontSize;
-		_this._domElement.style.fontWeight = cssArgs.fontWeight;
-		_this._domElement.style.textDecoration = cssArgs.textDecoration;
-		_this._domElement.style.fontStyle = cssArgs.fontStyle;
-		_this._domElement.style.fontFamily = cssArgs.fontFamily;
-		_this._domElement.style.textAlign = _this._alignMode;
-		return _this;
-	}
-
-	_createClass(Label, [{
-		key: 'font',
-		set: function set(font) {
-			if (_instanceof(font, Pico.Font)) {
-				this._font = font;
-				var cssArgs = this._font.toCSSArgs();
-				this._domElement.style.fontSize = cssArgs.fontSize;
-				this._domElement.style.fontWeight = cssArgs.fontWeight;
-				this._domElement.style.textDecoration = cssArgs.textDecoration;
-				this._domElement.style.fontStyle = cssArgs.fontStyle;
-				this._domElement.style.fontFamily = cssArgs.fontFamily;
-			}
-		},
-		get: function get() {
-			return Object.create(this._font);
-		}
-	}, {
-		key: 'text',
-		set: function set(text) {
-			this._text = text;
-			this._domElement.innerHTML = this._text;
-		},
-		get: function get() {
-			return this._text;
-		}
-	}, {
-		key: 'alignMode',
-		set: function set(alignMode) {
-			this._alignMode = alignMode;
-			this._domElement.style.textAlign = this._alignMode;
-		},
-		get: function get() {
-			return this._alignMode;
-		}
-	}]);
-
-	return Label;
-})(Pico.UI.Control);
-Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
-	_inherits(LinkLabel, _Pico$UI$Label);
-
-	function LinkLabel(text, link) {
-		_classCallCheck(this, LinkLabel);
-
-		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkLabel).call(this, text));
-
-		_this2._href = link;
-		_this2.foreground = Pico.Colors.PicoLink;
-		var oldfont = _this2.font;
-		oldfont.underline = true;
-		_this2.font = oldfont;
-		_this2.cursor = Pico.Cursors.Pointer;
-		var obj = _this2;
-		_this2._domElement.addEventListener('click', function (e) {
-			window.open(obj._href, 'new');
-		});
-		return _this2;
-	}
-
-	_createClass(LinkLabel, [{
-		key: 'href',
-		set: function set(href) {
-			this._href = href;
-		},
-		get: function get() {
-			return this._href;
-		}
-	}]);
-
-	return LinkLabel;
-})(Pico.UI.Label);
-Pico.UI.Panel = (function (_Pico$UI$Control2) {
-	_inherits(Panel, _Pico$UI$Control2);
-
-	function Panel() {
-		_classCallCheck(this, Panel);
-
-		var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
-
-		_this3._domElements = document.createElement('pico');
-		_this3._domElements.className = 'pico-elements';
-		_this3._domElement.appendChild(_this3._domElements);
-		_this3._domElement.className = 'pico-panel';
-		_this3._elements = new Pico.UI._Elements(_this3._domElements);
-		return _this3;
-	}
-
-	_createClass(Panel, [{
-		key: 'elements',
-		get: function get() {
-			return this._elements;
-		}
-	}]);
-
-	return Panel;
-})(Pico.UI.Control);
-Pico.UI.Picture = (function (_Pico$UI$Control3) {
-	_inherits(Picture, _Pico$UI$Control3);
-
-	function Picture(image) {
-		_classCallCheck(this, Picture);
-
-		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(Picture).call(this));
-
-		_this4._image = image;
-		_this4._sizeMode = Pico.SizeMode.Normal;
-		_this4._imageRepeat = true;
-		_this4._domElement.className = 'pico-picture';
-		_this4._domElement.style.backgroundImage = 'url(' + _this4._image + ')';
-		_this4._alignMode = Pico.AlignMode.Left;
-		_this4._verticalAlignMode = Pico.VerticalAlignMode.Top;
-		_this4._domElement.style.backgroundPosition = _this4._verticalAlignMode + ' ' + _this4._alignMode;
-		_this4._domElement.style.backgroundRepeat = _this4._imageRepeat ? 'repeat' : 'no-repeat';
-		return _this4;
-	}
-
-	_createClass(Picture, [{
-		key: 'image',
-		set: function set(image) {
-			this._image = image;
-			this._domElement.style.backgroundImage = 'url(' + image + ')';
-		},
-		get: function get() {
-			return this._image;
-		}
-	}, {
-		key: 'size',
-		set: function set(size) {
-			_set(Object.getPrototypeOf(Picture.prototype), 'size', size, this);
-			if (this._sizeMode === Pico.SizeMode.Normal) {
-				this._domElement.style.webkitBackgroundSize = '';
-				this._domElement.style.backgroundSize = '';
-			} else if (this._sizeMode === Pico.SizeMode.Cover) {
-				this._domElement.style.webkitBackgroundSize = 'cover';
-				this._domElement.style.backgroundSize = 'cover';
-			} else if (this._sizeMode === Pico.SizeMode.Contain) {
-				this._domElement.style.webkitBackgroundSize = 'contain';
-				this._domElement.style.backgroundSize = 'contain';
-			} else if (this._sizeMode === Pico.SizeMode.Stretch) {
-				this._domElement.style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
-				this._domElement.style.backgroundSize = size.width + 'px ' + size.height + 'px';
-			}
-		},
-		get: function get() {
-			return _get(Object.getPrototypeOf(Picture.prototype), 'size', this);
-		}
-	}, {
-		key: 'sizeMode',
-		set: function set(sizeMode) {
-			this._sizeMode = sizeMode;
-			this.size = this.size;
-		},
-		get: function get() {
-			return this._sizeMode;
-		}
-	}, {
-		key: 'alignMode',
-		set: function set(alignMode) {
-			this._alignMode = alignMode;
-			this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
-		},
-		get: function get() {
-			return this._alignMode;
-		}
-	}, {
-		key: 'verticalAlignMode',
-		set: function set(verticalAlignMode) {
-			this._verticalAlignMode = verticalAlignMode;
-			this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
-		},
-		get: function get() {
-			return this._verticalAlignMode;
-		}
-	}, {
-		key: 'imageRepeat',
-		set: function set(imageRepeat) {
-			this._imageRepeat = imageRepeat;
-			this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
-		},
-		get: function get() {
-			return this._imageRepeat;
-		}
-	}]);
-
-	return Picture;
-})(Pico.UI.Control);
-Pico.UI.Window = (function (_Pico$UI$Panel) {
-	_inherits(Window, _Pico$UI$Panel);
-
-	function Window(title) {
-		_classCallCheck(this, Window);
-
-		var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
-
-		_this5.visible = false;
-		_this5._title = title === undefined ? '' : title;
-		_this5._titleElement = document.createElement('pico');
-		_this5._titleElement.className = 'pico-window-title';
-		_this5._titleElement.innerHTML = _this5._title;
-		_this5._minimizeElement = document.createElement('pico');
-		_this5._minimizeElement.className = 'pico-minimize';
-		_this5._minimizeElement.innerHTML = '–︎';
-		_this5._domElement.className = 'pico-window';
-		_this5._domElement.appendChild(_this5._titleElement);
-		_this5._domElement.appendChild(_this5._minimizeElement);
-		var diff = {};
-		var move = false;
-		var open = true;
-		var obj = _this5;
-		_this5._minimizeElement.addEventListener('click', function (e) {
-			if (!open) {
-				e.target.innerHTML = '–︎';
-				obj._domElement.style.height = obj.size.height + 'px';
-				if (obj.position.y + obj.size.height >= window.innerHeight) {
-					obj.position = new Pico.Position(obj.position.x, obj.position.y - (obj.position.y + obj.size.height - window.innerHeight));
-				}
-				obj._elements._domElement.style.display = 'block';
-			} else {
-				e.target.innerHTML = '◻';
-				obj._domElement.style.height = 20 + 'px';
-				obj._elements._domElement.style.display = 'none';
-			}
-			open = !open;
-		});
-		_this5._titleElement.addEventListener('mousedown', function (e) {
-			diff.x = e.offsetX;
-			diff.y = e.offsetY;
-			move = true;
-		});
-		var obj = _this5;
-		window.addEventListener('mousemove', function (e) {
-			if (move) {
-				var x = e.pageX;
-				var y = e.pageY;
-				if (x < 0) {
-					x = 0;
-				}
-				if (y < 0) {
-					y = 0;
-				}
-				if (x < diff.x) {
-					diff.x = x;
-				}
-				if (y <= diff.y) {
-					diff.y = y;
-				}
-				x = x - diff.x;
-				y = y - diff.y;
-				if (x + obj._titleElement.clientWidth >= window.innerWidth) {
-					x = window.innerWidth - obj._titleElement.clientWidth - 1;
-				}
-				if (y + obj._domElement.clientHeight >= window.innerHeight) {
-					y = window.innerHeight - obj._domElement.clientHeight;
-				}
-
-				obj.position = new Pico.Position(x, y);
-			}
-		});
-		window.addEventListener('mouseup', function () {
-			move = false;
-		});
-		return _this5;
-	}
-
-	_createClass(Window, [{
-		key: 'show',
-		value: function show() {
-			this.visible = true;
-			document.body.appendChild(this._domElement);
-		}
-	}, {
-		key: 'hide',
-		value: function hide() {
-			this.visible = false;
-			document.body.removeChild(this._domElement);
-		}
-	}, {
-		key: 'title',
-		set: function set(title) {
-			this._title = title;
-			this._titleElement.innerHTML = this._title;
-		},
-		get: function get() {
-			return this._title;
-		}
-	}]);
-
-	return Window;
-})(Pico.UI.Panel);
-
 Pico.UI._Elements = (function () {
 	function Elements(domElement) {
 		_classCallCheck(this, Elements);
@@ -1057,4 +789,533 @@ Pico.UI._Event = (function () {
 
 	return Event;
 })();
-//# sourceMappingURL=pico.js.map
+Pico.UI.Control = (function () {
+	function Control() {
+		_classCallCheck(this, Control);
+
+		this._events = {};
+		this._listeners = {};
+		this._domElement = document.createElement('pico');
+		this.eventClick = new Pico.UI._Event(this, 'click', true);
+		this.eventMouseDown = new Pico.UI._Event(this, 'mousedown', true);
+		this.eventMouseUp = new Pico.UI._Event(this, 'mouseup', true);
+		this.eventMouseMove = new Pico.UI._Event(this, 'mousemove', true);
+		this.eventMouseEnter = new Pico.UI._Event(this, 'mouseenter', true);
+		this.eventMouseLeave = new Pico.UI._Event(this, 'mouseleave', true);
+		this.eventResized = new Pico.UI._Event(this, 'resized', true);
+		this.eventBackgroundChanged = new Pico.UI._Event(this, 'backgroundChanged');
+		this.eventForegroundChanged = new Pico.UI._Event(this, 'foregroundChanged');
+		this.eventVisibleChanged = new Pico.UI._Event(this, 'visiblechanged');
+		this.eventMoved = new Pico.UI._Event(this, 'moved');
+		this._domElement.style.overflow = 'hidden';
+		this.size = new Pico.Size(0, 0);
+		this.position = new Pico.Position(0, 0);
+		this.padding = new Pico.Padding(0);
+		this.margin = new Pico.Margin(0);
+		this.visible = true;
+		this.cursor = Pico.Cursors.Default;
+		this.foreground = Pico.Colors.PicoText;
+		this.background = Pico.Colors.PicoWindow;
+	}
+
+	_createClass(Control, [{
+		key: 'margin',
+		set: function set(margin) {
+			if (_instanceof(margin, Pico.Margin)) {
+				this._margin = new Pico.Margin(margin.top, margin.left, margin.bottom, margin.right, this);
+			}
+		},
+		get: function get() {
+			return this._margin;
+		}
+	}, {
+		key: 'padding',
+		set: function set(padding) {
+			if (_instanceof(padding, Pico.Padding)) {
+				this._padding = new Pico.Padding(padding.top, padding.left, padding.bottom, padding.right, this);
+			}
+		},
+		get: function get() {
+			return this._padding;
+		}
+	}, {
+		key: 'background',
+		set: function set(color) {
+			if (_instanceof(color, Pico.Color)) {
+				this._background = color;
+			} else {
+				this._background = new Pico.Color(color);
+			}
+			this._domElement.style.backgroundColor = this._background.toRgba();
+			this.eventBackgroundChanged.trigger();
+		},
+		get: function get() {
+			return Object.create(this._background);
+		}
+	}, {
+		key: 'foreground',
+		set: function set(color) {
+			if (_instanceof(color, Pico.Color)) {
+				this._foreground = color;
+			} else {
+				this._foreground = new Pico.Color(color);
+			}
+			this._domElement.style.color = this._foreground.toRgba();
+			this.eventForegroundChanged.trigger();
+		},
+		get: function get() {
+			return Object.create(this._foreground);
+		}
+	}, {
+		key: 'cursor',
+		set: function set(cursor) {
+			if (_instanceof(cursor, Pico.Cursor)) {
+				this._cursor = cursor;
+				this._domElement.style.cursor = this._cursor.style;
+			}
+		},
+		get: function get() {
+			return Object.create(this._cursor);
+		}
+	}, {
+		key: 'position',
+		set: function set(position) {
+			if (_instanceof(position, Pico.Position)) {
+				this._position = new Pico.Position(position.x, position.y, this);
+				this.eventMoved.trigger();
+			}
+		},
+		get: function get() {
+			return this._position;
+		}
+	}, {
+		key: 'size',
+		set: function set(size) {
+			if (_instanceof(size, Pico.Size)) {
+				this._size = new Pico.Size(size.width, size.height, this);
+				this.eventResized.trigger();
+			}
+		},
+		get: function get() {
+			return this._size;
+		}
+	}, {
+		key: 'visible',
+		set: function set(visible) {
+			this._visible = visible;
+			this._domElement.style.display = this._visible ? 'block' : 'none';
+			this.eventVisibleChanged.trigger();
+		},
+		get: function get() {
+			return this._visible;
+		}
+	}, {
+		key: 'domElement',
+		get: function get() {
+			return this._domElement;
+		}
+	}]);
+
+	return Control;
+})();
+Pico.UI.Panel = (function (_Pico$UI$Control) {
+	_inherits(Panel, _Pico$UI$Control);
+
+	function Panel() {
+		_classCallCheck(this, Panel);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
+
+		_this._domElements = document.createElement('pico');
+		_this._domElements.className = 'pico-elements';
+		_this._domElement.appendChild(_this._domElements);
+		_this._domElement.className = 'pico-panel';
+		_this._elements = new Pico.UI._Elements(_this._domElements);
+		return _this;
+	}
+
+	_createClass(Panel, [{
+		key: 'elements',
+		get: function get() {
+			return this._elements;
+		}
+	}]);
+
+	return Panel;
+})(Pico.UI.Control);
+Pico.UI.Window = (function (_Pico$UI$Panel) {
+	_inherits(Window, _Pico$UI$Panel);
+
+	function Window(title) {
+		_classCallCheck(this, Window);
+
+		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
+
+		_this2.visible = false;
+		_this2._title = title === undefined ? '' : title;
+		_this2._titleElement = document.createElement('pico');
+		_this2._titleElement.className = 'pico-window-title';
+		_this2._titleElement.innerHTML = _this2._title;
+		_this2._minimizeElement = document.createElement('pico');
+		_this2._minimizeElement.className = 'pico-minimize';
+		_this2._minimizeElement.innerHTML = '–︎';
+		_this2._domElement.className = 'pico-window';
+		_this2._domElement.appendChild(_this2._titleElement);
+		_this2._domElement.appendChild(_this2._minimizeElement);
+		var diff = {};
+		var move = false;
+		var open = true;
+		var obj = _this2;
+		_this2._minimizeElement.addEventListener('click', function (e) {
+			if (!open) {
+				e.target.innerHTML = '–︎';
+				obj._domElement.style.height = obj.size.height + 'px';
+				if (obj.position.y + obj.size.height >= window.innerHeight) {
+					obj.position = new Pico.Position(obj.position.x, obj.position.y - (obj.position.y + obj.size.height - window.innerHeight));
+				}
+				obj._elements._domElement.style.display = 'block';
+			} else {
+				e.target.innerHTML = '◻';
+				obj._domElement.style.height = 20 + 'px';
+				obj._elements._domElement.style.display = 'none';
+			}
+			open = !open;
+		});
+		_this2._titleElement.addEventListener('mousedown', function (e) {
+			diff.x = e.offsetX;
+			diff.y = e.offsetY;
+			move = true;
+		});
+		var obj = _this2;
+		window.addEventListener('mousemove', function (e) {
+			if (move) {
+				var x = e.pageX;
+				var y = e.pageY;
+				if (x < 0) {
+					x = 0;
+				}
+				if (y < 0) {
+					y = 0;
+				}
+				if (x < diff.x) {
+					diff.x = x;
+				}
+				if (y <= diff.y) {
+					diff.y = y;
+				}
+				x = x - diff.x;
+				y = y - diff.y;
+				if (x + obj._titleElement.clientWidth >= window.innerWidth) {
+					x = window.innerWidth - obj._titleElement.clientWidth - 1;
+				}
+				if (y + obj._domElement.clientHeight >= window.innerHeight) {
+					y = window.innerHeight - obj._domElement.clientHeight;
+				}
+
+				obj.position = new Pico.Position(x, y);
+			}
+		});
+		window.addEventListener('mouseup', function () {
+			move = false;
+		});
+		return _this2;
+	}
+
+	_createClass(Window, [{
+		key: 'show',
+		value: function show() {
+			this.visible = true;
+			document.body.appendChild(this._domElement);
+		}
+	}, {
+		key: 'hide',
+		value: function hide() {
+			this.visible = false;
+			document.body.removeChild(this._domElement);
+		}
+	}, {
+		key: 'title',
+		set: function set(title) {
+			this._title = title;
+			this._titleElement.innerHTML = this._title;
+		},
+		get: function get() {
+			return this._title;
+		}
+	}]);
+
+	return Window;
+})(Pico.UI.Panel);
+
+Pico.UI.Label = (function (_Pico$UI$Control2) {
+	_inherits(Label, _Pico$UI$Control2);
+
+	function Label(text) {
+		_classCallCheck(this, Label);
+
+		var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Label).call(this));
+
+		_this3._text = text === undefined ? '' : text;
+		_this3._domElement.className = 'pico-label';
+		_this3._domElement.innerHTML = _this3._text;
+		_this3._font = new Pico.Font();
+		_this3._alignMode = Pico.AlignMode.Left;
+		var cssArgs = _this3._font.toCSSArgs();
+		_this3._domElement.style.fontSize = cssArgs.fontSize;
+		_this3._domElement.style.fontWeight = cssArgs.fontWeight;
+		_this3._domElement.style.textDecoration = cssArgs.textDecoration;
+		_this3._domElement.style.fontStyle = cssArgs.fontStyle;
+		_this3._domElement.style.fontFamily = cssArgs.fontFamily;
+		_this3._domElement.style.textAlign = _this3._alignMode;
+		return _this3;
+	}
+
+	_createClass(Label, [{
+		key: 'font',
+		set: function set(font) {
+			if (_instanceof(font, Pico.Font)) {
+				this._font = font;
+				var cssArgs = this._font.toCSSArgs();
+				this._domElement.style.fontSize = cssArgs.fontSize;
+				this._domElement.style.fontWeight = cssArgs.fontWeight;
+				this._domElement.style.textDecoration = cssArgs.textDecoration;
+				this._domElement.style.fontStyle = cssArgs.fontStyle;
+				this._domElement.style.fontFamily = cssArgs.fontFamily;
+			}
+		},
+		get: function get() {
+			return Object.create(this._font);
+		}
+	}, {
+		key: 'text',
+		set: function set(text) {
+			this._text = text;
+			this._domElement.innerHTML = this._text;
+		},
+		get: function get() {
+			return this._text;
+		}
+	}, {
+		key: 'alignMode',
+		set: function set(alignMode) {
+			this._alignMode = alignMode;
+			this._domElement.style.textAlign = this._alignMode;
+		},
+		get: function get() {
+			return this._alignMode;
+		}
+	}]);
+
+	return Label;
+})(Pico.UI.Control);
+Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
+	_inherits(LinkLabel, _Pico$UI$Label);
+
+	function LinkLabel(text, link) {
+		_classCallCheck(this, LinkLabel);
+
+		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkLabel).call(this, text));
+
+		_this4._href = link;
+		_this4.foreground = Pico.Colors.PicoLink;
+		var oldfont = _this4.font;
+		oldfont.underline = true;
+		_this4.font = oldfont;
+		_this4.cursor = Pico.Cursors.Pointer;
+		var obj = _this4;
+		_this4._domElement.addEventListener('click', function (e) {
+			window.open(obj._href, 'new');
+		});
+		return _this4;
+	}
+
+	_createClass(LinkLabel, [{
+		key: 'href',
+		set: function set(href) {
+			this._href = href;
+		},
+		get: function get() {
+			return this._href;
+		}
+	}]);
+
+	return LinkLabel;
+})(Pico.UI.Label);
+Pico.UI.Picture = (function (_Pico$UI$Control3) {
+	_inherits(Picture, _Pico$UI$Control3);
+
+	function Picture(image) {
+		_classCallCheck(this, Picture);
+
+		var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Picture).call(this));
+
+		_this5._image = image;
+		_this5._sizeMode = Pico.SizeMode.Normal;
+		_this5._imageRepeat = true;
+		_this5._domElement.className = 'pico-picture';
+		_this5._domElement.style.backgroundImage = 'url(' + _this5._image + ')';
+		_this5._alignMode = Pico.AlignMode.Left;
+		_this5._verticalAlignMode = Pico.VerticalAlignMode.Top;
+		_this5._domElement.style.backgroundPosition = _this5._verticalAlignMode + ' ' + _this5._alignMode;
+		_this5._domElement.style.backgroundRepeat = _this5._imageRepeat ? 'repeat' : 'no-repeat';
+		return _this5;
+	}
+
+	_createClass(Picture, [{
+		key: 'image',
+		set: function set(image) {
+			this._image = image;
+			this._domElement.style.backgroundImage = 'url(' + image + ')';
+		},
+		get: function get() {
+			return this._image;
+		}
+	}, {
+		key: 'size',
+		set: function set(size) {
+			_set(Object.getPrototypeOf(Picture.prototype), 'size', size, this);
+			if (this._sizeMode === Pico.SizeMode.Normal) {
+				this._domElement.style.webkitBackgroundSize = '';
+				this._domElement.style.backgroundSize = '';
+			} else if (this._sizeMode === Pico.SizeMode.Cover) {
+				this._domElement.style.webkitBackgroundSize = 'cover';
+				this._domElement.style.backgroundSize = 'cover';
+			} else if (this._sizeMode === Pico.SizeMode.Contain) {
+				this._domElement.style.webkitBackgroundSize = 'contain';
+				this._domElement.style.backgroundSize = 'contain';
+			} else if (this._sizeMode === Pico.SizeMode.Stretch) {
+				this._domElement.style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
+				this._domElement.style.backgroundSize = size.width + 'px ' + size.height + 'px';
+			}
+		},
+		get: function get() {
+			return _get(Object.getPrototypeOf(Picture.prototype), 'size', this);
+		}
+	}, {
+		key: 'sizeMode',
+		set: function set(sizeMode) {
+			this._sizeMode = sizeMode;
+			this.size = this.size;
+		},
+		get: function get() {
+			return this._sizeMode;
+		}
+	}, {
+		key: 'alignMode',
+		set: function set(alignMode) {
+			this._alignMode = alignMode;
+			this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+		},
+		get: function get() {
+			return this._alignMode;
+		}
+	}, {
+		key: 'verticalAlignMode',
+		set: function set(verticalAlignMode) {
+			this._verticalAlignMode = verticalAlignMode;
+			this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+		},
+		get: function get() {
+			return this._verticalAlignMode;
+		}
+	}, {
+		key: 'imageRepeat',
+		set: function set(imageRepeat) {
+			this._imageRepeat = imageRepeat;
+			this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
+		},
+		get: function get() {
+			return this._imageRepeat;
+		}
+	}]);
+
+	return Picture;
+})(Pico.UI.Control);
+Pico.UI.Button = (function (_Pico$UI$Label2) {
+	_inherits(Button, _Pico$UI$Label2);
+
+	function Button(text) {
+		_classCallCheck(this, Button);
+
+		var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(Button).call(this, text));
+
+		_this6._domElement.style.borderRadius = '3px';
+		_this6.padding = new Pico.Padding(5, 5, 5, 5);
+		_this6.background = new Pico.Color(70, 70, 70);
+		_this6._domElement.className = 'pico-button';
+		_this6.cursor = Pico.Cursors.Pointer;
+		_this6._domElement.style.mozTransition = 'background-image 300ms ease';
+		_this6._domElement.style.webkitTransition = 'background-image 300ms ease';
+		_this6._domElement.style.msTransition = 'background-image 300ms ease';
+		_this6._domElement.style.oTransition = 'background-image 300ms ease';
+		_this6._domElement.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
+		var obj = _this6;
+		_this6._domElement.addEventListener('mouseenter', function () {
+			obj._domElement.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
+		});
+		_this6._domElement.addEventListener('mouseleave', function () {
+			obj._domElement.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
+		});
+		return _this6;
+	}
+
+	return Button;
+})(Pico.UI.Label);
+
+Pico.UI.TextBox = (function (_Pico$UI$Label3) {
+	_inherits(TextBox, _Pico$UI$Label3);
+
+	function TextBox(defaultText) {
+		_classCallCheck(this, TextBox);
+
+		var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(TextBox).call(this, defaultText));
+
+		_this7._domElement.style.border = '1px solid #686868';
+		_this7.padding = new Pico.Padding(5, 5, 5, 5);
+		_this7._domElement.contentEditable = true;
+		_this7._domElement.style.outline = '0';
+		_this7._domElement.className = "pico-textbox";
+		var obj = _this7;
+		_this7._multiline = false;
+		_this7._domElement.addEventListener('keydown', function (e) {
+			if (!obj._multiline) {
+				if (e.keyCode == 13) {
+					e.preventDefault();
+				}
+			}
+		});
+		_this7._domElement.addEventListener('paste', function (e) {
+			e.preventDefault();
+			var data = e.clipboardData.getData("text/plain");
+			if (!obj._multiline) {
+				data = data.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
+			}
+			document.execCommand('inserttext', false, data);
+		});
+		_this7._domElement.addEventListener('keyup', function () {
+			obj._text = obj._domElement.innerHTML.replace(/<div>(.*?)<\/div>/g, '$1\n').replace(/<br>/g, '\n');
+		});
+		return _this7;
+	}
+
+	_createClass(TextBox, [{
+		key: 'text',
+		set: function set(text) {
+			this._text = text;
+			this._domElement.innerHTML = this._text.replace(/\n/g, '<br>');
+		},
+		get: function get() {
+			return this._text;
+		}
+	}, {
+		key: 'multiline',
+		set: function set(multiline) {
+			this._multiline = multiline;
+		},
+		get: function get() {
+			return this._multiline;
+		}
+	}]);
+
+	return TextBox;
+})(Pico.UI.Label);

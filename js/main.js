@@ -1,8 +1,8 @@
 var mainForm = new Pico.UI.Window('MainForm');
 mainForm.size = new Pico.Size(300,300);
 mainForm.position = new Pico.Position(40, 40);
-var label = new Pico.UI.Label('Boo');
-label.size = new Pico.Size(40, 20);
+var label = new Pico.UI.TextBox();
+label.size = new Pico.Size(200, 20);
 label.position = new Pico.Position(20, 20);
 
 
@@ -20,5 +20,11 @@ picture.alignMode = Pico.AlignMode.Center;
 picture.eventClick.add(function() {
 	alert('clicked');
 });
-mainForm.elements.add(label, linkLabel, picture);
+
+var button = new Pico.UI.Button('Hallo');
+button.size = new Pico.Size(60,24);
+button.position = new Pico.Position(100,200);
+button.alignMode = Pico.AlignMode.Center;
+
+mainForm.elements.add(label, linkLabel, picture, button);
 mainForm.show();

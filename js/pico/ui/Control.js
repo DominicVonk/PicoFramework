@@ -1,23 +1,8 @@
 Pico.UI.Control = class Control {
 	constructor() {
-		this._size = new Pico.Size(0,0);
-		this._position = new Pico.Position(0,0);
-		this._visible = true;
-		this._cursor = Pico.Cursors.Default;
-		this._foreground = Pico.Colors.PicoText;
-		this._background = Pico.Colors.PicoWindow;
 		this._events = {};
 		this._listeners = {};
 		this._domElement = document.createElement('pico');
-		this._domElement.style.width = this._size.width+ 'px';
-		this._domElement.style.height = this._size.height+ 'px';
-		this._domElement.style.top = this._position.y+ 'px';
-		this._domElement.style.left = this._position.x+ 'px';
-		this._domElement.style.display = this._visible ? 'block' : 'none';
-		this._domElement.style.backgroundColor = this._background.toRgba();
-		this._domElement.style.color = this._foreground.toRgba();
-		this._domElement.style.cursor = this._cursor.style;
-		this._domElement.style.overflow = 'hidden';
 		this.eventClick = new Pico.UI._Event(this, 'click', true);
 		this.eventMouseDown = new Pico.UI._Event(this, 'mousedown', true);
 		this.eventMouseUp = new Pico.UI._Event(this, 'mouseup', true);
@@ -29,8 +14,33 @@ Pico.UI.Control = class Control {
 		this.eventForegroundChanged = new Pico.UI._Event(this, 'foregroundChanged');
 		this.eventVisibleChanged = new Pico.UI._Event(this, 'visiblechanged');
 		this.eventMoved = new Pico.UI._Event(this, 'moved');
+		this._domElement.style.overflow = 'hidden';
+		this.size = new Pico.Size(0,0);
+		this.position = new Pico.Position(0,0);
+		this.padding = new Pico.Padding(0);
+		this.margin = new Pico.Margin(0);
+		this.visible = true;
+		this.cursor = Pico.Cursors.Default;
+		this.foreground = Pico.Colors.PicoText;
+		this.background = Pico.Colors.PicoWindow;
 	}
 
+	set margin(margin) {
+		if (margin instanceof Pico.Margin) {
+			this._margin = new Pico.Margin(margin.top, margin.left, margin.bottom, margin.right, this);
+		}
+	}
+	get margin() {
+		return this._margin;
+	}
+	set padding(padding) {
+		if (padding instanceof Pico.Padding) {
+			this._padding = new Pico.Padding(padding.top, padding.left, padding.bottom, padding.right, this);
+		}
+	}
+	get padding() {
+		return this._padding;
+	}
 	set background(color) {
 		if (color instanceof Pico.Color) {
 			this._background = color;
@@ -69,26 +79,22 @@ Pico.UI.Control = class Control {
 
 	set position(position) {
 		if (position instanceof Pico.Position) {
-			this._position = position;
-			this._domElement.style.top = this._position.y + 'px';
-			this._domElement.style.left = this._position.x + 'px';
+			this._position = new Pico.Position(position.x, position.y, this);
 			this.eventMoved.trigger();
 		}
 	}
 	get position() {
-		return Object.create(this._position);
+		return this._position;
 	}
 
 	set size(size) {
 		if (size instanceof Pico.Size) {
-			this._size = size;
-			this._domElement.style.width = this._size.width+ 'px';
-			this._domElement.style.height = this._size.height+ 'px';
+			this._size = new Pico.Size(size.width, size.height, this);
 			this.eventResized.trigger();
 		}
 	}
 	get size() {
-		return Object.create(this._size);
+		return this._size;
 	}
 
 	set visible(visible) {

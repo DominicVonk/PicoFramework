@@ -19,7 +19,7 @@ Pico.FontStyle = {
 	ExtraBlackItalic: 17
 };
 Pico.Font = class Font {
-	constructor(family = 'Arial', size = 14, type = Pico.FontStyle.Normal, underline = false) {
+	constructor(family = 'Arial', size = 12, type = Pico.FontStyle.Normal, underline = false) {
 		this._family = family;
 		this._size = size;
 		this._type = type;
