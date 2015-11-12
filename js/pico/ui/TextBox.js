@@ -6,6 +6,7 @@ Pico.UI.TextBox = class TextBox extends Pico.UI.Label {
 		this._domElement.contentEditable = true;
 		this._domElement.style.outline = '0';
 		this._domElement.className = "pico-textbox";
+		this.eventTextChanged = new Pico.UI._Event(this, 'textchanged');
 		var obj = this;
 		this._multiline = false;
 		this._domElement.addEventListener('keydown', function(e) {
@@ -22,9 +23,11 @@ Pico.UI.TextBox = class TextBox extends Pico.UI.Label {
     			data = data.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
     		}
     		document.execCommand('inserttext', false, data);
+    		obj.eventTextChanged.trigger();
 		});
 		this._domElement.addEventListener('keyup', function() {
 			obj._text = obj._domElement.innerHTML.replace(/<div>(.*?)<\/div>/g, '$1\n').replace(/<br>/g, '\n');
+			obj.eventTextChanged.trigger();
 		});
 	}
 

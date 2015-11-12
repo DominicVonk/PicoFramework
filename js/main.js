@@ -5,11 +5,9 @@ var label = new Pico.UI.TextBox();
 label.size = new Pico.Size(200, 20);
 label.position = new Pico.Position(20, 20);
 
-
-var linkLabel = new Pico.UI.LinkLabel('google', 'http://www.google.nl');
+var linkLabel = new Pico.UI.Checkbox('google', true);
 linkLabel.size = new Pico.Size(60, 20);
 linkLabel.position = new Pico.Position(20, 40);
-
 
 var picture = new Pico.UI.Picture('img/cappuccino.jpg');
 picture.size = new Pico.Size(80, 80);
