@@ -23,7 +23,12 @@ if (!Object.create) {
 }
 
 var Pico = {
-	UI: {}
+	UI: {
+		_newDomElement: function _newDomElement() {
+			var domElement = document.createElement('pico');
+			return domElement;
+		}
+	}
 };
 Pico.AlignMode = {
 	Left: 'left',
@@ -795,7 +800,7 @@ Pico.UI.Control = (function () {
 
 		this._events = {};
 		this._listeners = {};
-		this._domElement = document.createElement('pico');
+		this._domElement = Pico.UI._newDomElement();
 		this.eventClick = new Pico.UI._Event(this, 'click', true);
 		this.eventMouseDown = new Pico.UI._Event(this, 'mousedown', true);
 		this.eventMouseUp = new Pico.UI._Event(this, 'mouseup', true);
@@ -926,7 +931,7 @@ Pico.UI.Panel = (function (_Pico$UI$Control) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
 
-		_this._domElements = document.createElement('pico');
+		_this._domElements = Pico.UI._newDomElement();
 		_this._domElements.className = 'pico-elements';
 		_this._domElement.appendChild(_this._domElements);
 		_this._domElement.className = 'pico-panel';
@@ -953,10 +958,10 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 
 		_this2.visible = false;
 		_this2._title = title === undefined ? '' : title;
-		_this2._titleElement = document.createElement('pico');
+		_this2._titleElement = Pico.UI._newDomElement();
 		_this2._titleElement.className = 'pico-window-title';
 		_this2._titleElement.innerHTML = _this2._title;
-		_this2._minimizeElement = document.createElement('pico');
+		_this2._minimizeElement = Pico.UI._newDomElement();
 		_this2._minimizeElement.className = 'pico-minimize';
 		_this2._minimizeElement.innerHTML = '–︎';
 		_this2._domElement.className = 'pico-window';
@@ -991,20 +996,14 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 			if (move) {
 				var x = e.pageX;
 				var y = e.pageY;
+				x = x - diff.x;
+				y = y - diff.y;
 				if (x < 0) {
 					x = 0;
 				}
 				if (y < 0) {
 					y = 0;
 				}
-				if (x < diff.x) {
-					diff.x = x;
-				}
-				if (y <= diff.y) {
-					diff.y = y;
-				}
-				x = x - diff.x;
-				y = y - diff.y;
 				if (x + obj._titleElement.clientWidth >= window.innerWidth) {
 					x = window.innerWidth - obj._titleElement.clientWidth - 1;
 				}
@@ -1116,6 +1115,7 @@ Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
 
 		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkLabel).call(this, text));
 
+		_this4._domElement.className = 'pico-linklabel';
 		_this4._href = link;
 		_this4.foreground = Pico.Colors.PicoLink;
 		var oldfont = _this4.font;
@@ -1322,18 +1322,20 @@ Pico.UI.TextBox = (function (_Pico$UI$Label3) {
 
 	return TextBox;
 })(Pico.UI.Label);
-Pico.UI.Checkbox = (function (_Pico$UI$Label4) {
-	_inherits(Checkbox, _Pico$UI$Label4);
+Pico.UI.CheckBox = (function (_Pico$UI$Label4) {
+	_inherits(CheckBox, _Pico$UI$Label4);
 
-	function Checkbox(text, checked) {
-		_classCallCheck(this, Checkbox);
+	function CheckBox(text, checked) {
+		_classCallCheck(this, CheckBox);
 
-		var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Checkbox).call(this, text));
+		var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(CheckBox).call(this, text));
 
+		_this8._domElement.className = 'pico-checkbox';
+		_this8.eventCheckChanged = new Pico.UI._Event(_this8, 'checkChanged');
 		_this8.checked = checked ? true : false;
 		_this8._domElement.style.backgroundRepeat = 'no-repeat';
 		_this8._domElement.style.backgroundPosition = 'left center';
-		_this8._domElement.style.paddingLeft = '20px';
+		_this8.padding = new Pico.Padding(3);
 		var obj = _this8;
 		_this8._domElement.addEventListener('click', function () {
 			obj.checked = !obj.checked;
@@ -1341,18 +1343,100 @@ Pico.UI.Checkbox = (function (_Pico$UI$Label4) {
 		return _this8;
 	}
 
-	_createClass(Checkbox, [{
+	_createClass(CheckBox, [{
 		key: 'checked',
 		set: function set(checked) {
 			this._checked = checked;
 			var checkimg = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxMnB4IiB2aWV3Qm94PSIwIDAgMTIgMTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM6c2tldGNoPSJodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2gvbnMiPiAgICAgICAgPHRpdGxlPlJlY3RhbmdsZSA5IENvcHkgMyArIExpbmUgKyBMaW5lIENvcHk8L3RpdGxlPiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4gICAgPGRlZnM+PC9kZWZzPiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4gICAgICAgIDxnIGlkPSJUYWJsZXQtOeKAsy1MYW5kc2NhcGUiIHNrZXRjaDp0eXBlPSJNU0FydGJvYXJkR3JvdXAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzEuMDAwMDAwLCAtMjg0LjAwMDAwMCkiPiAgICAgICAgICAgIDxnIGlkPSJSZWN0YW5nbGUtOS1Db3B5LTMtKy1MaW5lLSstTGluZS1Db3B5IiBza2V0Y2g6dHlwZT0iTVNMYXllckdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzEuMDAwMDAwLCAyODQuMDAwMDAwKSI+ICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtOS1Db3B5LTMiIHN0cm9rZT0iIzY4Njg2OCIgZmlsbD0iIzM3MzczNyIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIj48L3JlY3Q+ICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0zLDcgTDQuNSw4LjUiIGlkPSJMaW5lIiBzdHJva2U9IiNBNkE2QTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCI+PC9wYXRoPiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNOSw0IEw0LjUsOC41IiBpZD0iTGluZS1Db3B5IiBzdHJva2U9IiNBNkE2QTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCI+PC9wYXRoPiAgICAgICAgICAgIDwvZz4gICAgICAgIDwvZz4gICAgPC9nPjwvc3ZnPg==)';
 			var defaultimg = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxMnB4IiB2aWV3Qm94PSIwIDAgMTIgMTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM6c2tldGNoPSJodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2gvbnMiPiAgICAgICAgPHRpdGxlPlJlY3RhbmdsZSA5PC90aXRsZT4gICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+ICAgIDxkZWZzPjwvZGVmcz4gICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc2tldGNoOnR5cGU9Ik1TUGFnZSI+ICAgICAgICA8ZyBpZD0iVGFibGV0LTnigLMtTGFuZHNjYXBlIiBza2V0Y2g6dHlwZT0iTVNBcnRib2FyZEdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTcxLjAwMDAwMCwgLTI0NC4wMDAwMDApIiBzdHJva2U9IiM2ODY4NjgiIGZpbGw9IiMzNzM3MzciPiAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtOSIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCIgeD0iMTcxIiB5PSIyNDQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiI+PC9yZWN0PiAgICAgICAgPC9nPiAgICA8L2c+PC9zdmc+)';
+			this.eventCheckChanged.trigger();
 			this._domElement.style.backgroundImage = checked ? checkimg : defaultimg;
 		},
 		get: function get() {
 			return this._checked;
 		}
+	}, {
+		key: 'padding',
+		set: function set(padding) {
+			if (_instanceof(padding, Pico.Padding)) {
+				_set(Object.getPrototypeOf(CheckBox.prototype), 'padding', new Pico.Padding(padding.top, padding.left + 16, padding.bottom, padding.right, this), this);
+			}
+		}
 	}]);
 
-	return Checkbox;
+	return CheckBox;
 })(Pico.UI.Label);
+
+Pico.UI.ProgressBar = (function (_Pico$UI$Control4) {
+	_inherits(ProgressBar, _Pico$UI$Control4);
+
+	function ProgressBar(percentage, min, max) {
+		_classCallCheck(this, ProgressBar);
+
+		var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(ProgressBar).call(this));
+
+		_this9._innerDom = Pico.UI._newDomElement();
+		_this9._minimum = typeof min !== "undefined" ? min : 0;
+		_this9._maximum = typeof max !== "undefined" ? max : 100;
+		_this9._percentage = typeof percentage !== "undefined" ? percentage : 0;
+		if (_this9._percentage < min) {
+			_this9._percentage = min;
+		}
+		if (_this9._percentage > max) {
+			_this9._percentage = max;
+		}
+		_this9._domElement.className = 'pico-progressbar';
+		_this9._innerDom.className = 'pico-progressbar-inner';
+		_this9._innerDom.style.height = '100%';
+		_this9._domElement.appendChild(_this9._innerDom);
+		_this9._apply();
+		return _this9;
+	}
+
+	_createClass(ProgressBar, [{
+		key: '_apply',
+		value: function _apply() {
+			this._innerDom.style.width = (this._percentage - this._minimum) / (this._maximum - this._minimum) * this.size.width + 'px';
+		}
+	}, {
+		key: 'percentage',
+		set: function set(percentage) {
+			this._percentage = percentage;
+			this._apply();
+		},
+		get: function get() {
+			return this._percentage;
+		}
+	}, {
+		key: 'minimum',
+		set: function set(minimum) {
+			this._minimum = minimum;
+			this._apply();
+		},
+		get: function get() {
+			return this._minimum;
+		}
+	}, {
+		key: 'maximum',
+		set: function set(maximum) {
+			this._maximum = maximum;
+			this._apply();
+		},
+		get: function get() {
+			return this._maximum;
+		}
+	}, {
+		key: 'size',
+		set: function set(size) {
+			_set(Object.getPrototypeOf(ProgressBar.prototype), 'size', size, this);
+			if (typeof this._innerDom !== "undefined") {
+				this._apply();
+			}
+		},
+		get: function get() {
+			return _get(Object.getPrototypeOf(ProgressBar.prototype), 'size', this);
+		}
+	}]);
+
+	return ProgressBar;
+})(Pico.UI.Control);

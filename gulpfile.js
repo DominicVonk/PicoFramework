@@ -28,7 +28,8 @@ var buildList = [
 	'ui/Picture',
 	'ui/Button',
 	'ui/TextBox',
-	'ui/CheckBox'
+	'ui/CheckBox',
+	'ui/ProgressBar'
 ];
 gulp.task("build", function () {
 	var list = [];

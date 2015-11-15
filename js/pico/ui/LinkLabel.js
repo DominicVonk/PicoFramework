@@ -1,6 +1,7 @@
 Pico.UI.LinkLabel = class LinkLabel extends Pico.UI.Label {
 	constructor(text, link) {
 		super(text);
+		this._domElement.className = 'pico-linklabel';
 		this._href = link;
 		this.foreground = Pico.Colors.PicoLink;
 		var oldfont = this.font;

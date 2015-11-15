@@ -5,7 +5,7 @@ var label = new Pico.UI.TextBox();
 label.size = new Pico.Size(200, 20);
 label.position = new Pico.Position(20, 20);
 
-var linkLabel = new Pico.UI.Checkbox('google', true);
+var linkLabel = new Pico.UI.CheckBox('google');
 linkLabel.size = new Pico.Size(60, 20);
 linkLabel.position = new Pico.Position(20, 40);
 
@@ -24,5 +24,10 @@ button.size = new Pico.Size(60,24);
 button.position = new Pico.Position(100,200);
 button.alignMode = Pico.AlignMode.Center;
 
+var progress = new Pico.UI.ProgressBar(10);
+progress.size = new Pico.Size(100, 10);
+progress.position = new Pico.Position(190, 200);
+
+mainForm.elements.add(progress);
 mainForm.elements.add(label, linkLabel, picture, button);
 mainForm.show();

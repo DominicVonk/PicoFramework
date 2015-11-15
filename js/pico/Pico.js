@@ -7,5 +7,10 @@ if (!Object.create) {
 }
 
 var Pico = {
-	UI: {}
+	UI: {
+		_newDomElement: function() {
+			var domElement = document.createElement('pico');
+			return domElement;
+		}
+	}
 };

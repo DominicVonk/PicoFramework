@@ -32,7 +32,7 @@ pico.pico-window-title {
 	font-size: 12px;
 	height: 20px;
 	text-align: center;
-	background-color: #666;
+	background-color: #555;
 	color: rgb(255,255,255);
 	cursor: default;
     top: 0;
@@ -40,7 +40,7 @@ pico.pico-window-title {
     position: absolute;
 }
 pico.pico-window {
-	border: 1px solid #666;
+	border: 1px solid #555;
 	overflow: hidden;
 	-webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
 	-moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
@@ -65,4 +65,10 @@ pico.pico-minimize {
 	padding-left: 5px;
 	font-size: 14px;
 	text-align: right;
+}
+pico.pico-progressbar {
+	border: 1px solid #555;
+}
+pico.pico-progressbar-inner {
+	background-color: #555;
 }

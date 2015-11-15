@@ -2,7 +2,7 @@ Pico.UI.Control = class Control {
 	constructor() {
 		this._events = {};
 		this._listeners = {};
-		this._domElement = document.createElement('pico');
+		this._domElement = Pico.UI._newDomElement();
 		this.eventClick = new Pico.UI._Event(this, 'click', true);
 		this.eventMouseDown = new Pico.UI._Event(this, 'mousedown', true);
 		this.eventMouseUp = new Pico.UI._Event(this, 'mouseup', true);

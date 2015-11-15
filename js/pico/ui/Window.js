@@ -3,10 +3,10 @@ Pico.UI.Window = class Window extends Pico.UI.Panel {
 		super();
 		this.visible = false;
 		this._title = title === undefined ? '' : title;
-		this._titleElement = document.createElement('pico');
+		this._titleElement = Pico.UI._newDomElement();
 		this._titleElement.className = 'pico-window-title';
 		this._titleElement.innerHTML = this._title;
-		this._minimizeElement = document.createElement('pico');
+		this._minimizeElement = Pico.UI._newDomElement();
 		this._minimizeElement.className = 'pico-minimize';
 		this._minimizeElement.innerHTML = '–︎';
 		this._domElement.className = 'pico-window';
@@ -41,20 +41,14 @@ Pico.UI.Window = class Window extends Pico.UI.Panel {
 			if (move) {
 				var x = e.pageX;
 				var y = e.pageY;
+				x = x-diff.x;
+				y = y-diff.y;
 				if (x < 0) {
 					x = 0;
 				}
 				if (y < 0) {
 					y = 0;
 				}
-				if (x < diff.x) {
-					diff.x = x;
-				}
-				if (y <= diff.y) {
-					diff.y = y;
-				}
-				x = x-diff.x;
-				y = y-diff.y;
 				if (x + obj._titleElement.clientWidth >= window.innerWidth) {
 					x = window.innerWidth - obj._titleElement.clientWidth-1;
 				}

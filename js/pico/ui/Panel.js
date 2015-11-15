@@ -1,7 +1,7 @@
 Pico.UI.Panel = class Panel extends Pico.UI.Control {
 	constructor() {
 		super();
-		this._domElements = document.createElement('pico');
+		this._domElements = Pico.UI._newDomElement();
 		this._domElements.className = 'pico-elements';
 		this._domElement.appendChild(this._domElements);
 		this._domElement.className = 'pico-panel';
