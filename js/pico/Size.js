@@ -23,8 +23,8 @@ Pico.Size = class Size {
 	}
 	apply() {
 		if (typeof this._picoObject !== "undefined") {
-			this._picoObject.domElement.style.height = this._height + 'px';
-			this._picoObject.domElement.style.width = this._width + 'px';
+			this._picoObject.private('domElement').style.height = this._height + 'px';
+			this._picoObject.private('domElement').style.width = this._width + 'px';
 		}
 	}
 }

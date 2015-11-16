@@ -47,7 +47,7 @@ Pico.Margin = class Margin {
 	}
 	apply() {
 		if (typeof this._picoObject !== "undefined") {
-			this._picoObject.domElement.style.margin = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
+			this._picoObject.private('domElement').style.margin = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
 		}
 	}
 }

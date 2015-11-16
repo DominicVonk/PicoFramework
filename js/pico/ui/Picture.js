@@ -1,68 +1,75 @@
 Pico.UI.Picture = class Picture extends Pico.UI.Control {
 	constructor(image) {
 		super();
-		this._image = image;
-		this._sizeMode = Pico.SizeMode.Normal;
-		this._imageRepeat = true;
-		this._domElement.className = 'pico-picture';
-		this._domElement.style.backgroundImage = 'url(' + this._image + ')';
-		this._alignMode = Pico.AlignMode.Left;
-		this._verticalAlignMode = Pico.VerticalAlignMode.Top;
-		this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
-		this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
+		/* Private variable name declaration */
+		this._private.image = Symbol();
+		this._private.sizeMode = Symbol();
+		this._private.imageRepeat = Symbol();
+		this._private.alignMode = Symbol();
+		this._private.verticalAlignMode = Symbol();
+		/* End private variable name declaration */
+		this.private('image', image);
+		this.private('sizeMode', Pico.SizeMode.Normal);
+		this.private('imageRepeat', true);
+		this.private('domElement').className = 'pico-picture';
+		this.private('domElement').style.backgroundImage = 'url(' + this.private('image') + ')';
+		this.private('alignMode', Pico.AlignMode.Left);
+		this.private('verticalAlignMode', Pico.VerticalAlignMode.Top);
+		this.private('domElement').style.backgroundPosition = this.private('verticalAlignMode') + ' ' + this.private('alignMode');
+		this.private('domElement').style.backgroundRepeat = this.private('imageRepeat') ? 'repeat' : 'no-repeat';
 	}
 	set image (image) {
-		this._image = image;
-		this._domElement.style.backgroundImage = 'url(' + image + ')';
+		this.private('image', image);
+		this.private('domElement').style.backgroundImage = 'url(' + image + ')';
 	}
 	get image () {
-		return this._image;
+		return this.private('image');
 	}
 	set size (size) {
 		super.size = size;
-		if (this._sizeMode === Pico.SizeMode.Normal) {
-			this._domElement.style.webkitBackgroundSize = '';
-			this._domElement.style.backgroundSize = '';
-		} else if (this._sizeMode === Pico.SizeMode.Cover) {
-			this._domElement.style.webkitBackgroundSize = 'cover';
-			this._domElement.style.backgroundSize = 'cover';
-		} else if (this._sizeMode === Pico.SizeMode.Contain) {
-			this._domElement.style.webkitBackgroundSize = 'contain';
-			this._domElement.style.backgroundSize = 'contain';
-		} else if (this._sizeMode === Pico.SizeMode.Stretch) {
-			this._domElement.style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
-			this._domElement.style.backgroundSize = size.width + 'px ' + size.height + 'px';
+		if (this.private('sizeMode') === Pico.SizeMode.Normal) {
+			this.private('domElement').style.webkitBackgroundSize = '';
+			this.private('domElement').style.backgroundSize = '';
+		} else if (this.private('sizeMode') === Pico.SizeMode.Cover) {
+			this.private('domElement').style.webkitBackgroundSize = 'cover';
+			this.private('domElement').style.backgroundSize = 'cover';
+		} else if (this.private('sizeMode') === Pico.SizeMode.Contain) {
+			this.private('domElement').style.webkitBackgroundSize = 'contain';
+			this.private('domElement').style.backgroundSize = 'contain';
+		} else if (this.private('sizeMode') === Pico.SizeMode.Stretch) {
+			this.private('domElement').style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
+			this.private('domElement').style.backgroundSize = size.width + 'px ' + size.height + 'px';
 		}
 	}
 	get size() {
 		return super.size;
 	}
 	set sizeMode (sizeMode) {
-		this._sizeMode = sizeMode;
+		this.private('sizeMode', sizeMode);
 		this.size = this.size;
 	}
 	get sizeMode () {
-		return this._sizeMode;
+		return this.private('sizeMode');
 	}
 	set alignMode (alignMode) {
-		this._alignMode = alignMode;
-		this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+		this.private('alignMode', alignMode);
+		this.private('domElement').style.backgroundPosition = this.private('verticalAlignMode') + ' ' + this.private('alignMode');
 	}
 	get alignMode () {
-		return this._alignMode;
+		return this.private('alignMode');
 	}
 	set verticalAlignMode(verticalAlignMode) {
-		this._verticalAlignMode = verticalAlignMode;
-		this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+		this.private('verticalAlignMode', verticalAlignMode);
+		this.private('domElement').style.backgroundPosition = this.private('verticalAlignMode') + ' ' + this.private('alignMode');
 	}
 	get verticalAlignMode() {
-		return this._verticalAlignMode;
+		return this.private('verticalAlignMode');
 	}
 	set imageRepeat(imageRepeat) {
-		this._imageRepeat = imageRepeat;
-		this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
+		this.private('imageRepeat', imageRepeat);
+		this.private('domElement').style.backgroundRepeat = this.private('imageRepeat') ? 'repeat' : 'no-repeat';
 	}
 	get imageRepeat() {
-		return this._imageRepeat;
+		return this.private('imageRepeat');
 	}
 };

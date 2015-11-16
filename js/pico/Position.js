@@ -23,8 +23,8 @@ Pico.Position = class Position {
 	}
 	apply() {
 		if (typeof this._picoObject !== "undefined") {
-			this._picoObject.domElement.style.left = this._x + 'px';
-			this._picoObject.domElement.style.top = this._y + 'px';
+			this._picoObject.private('domElement').style.left = this._x + 'px';
+			this._picoObject.private('domElement').style.top = this._y + 'px';
 		}
 	}
 }

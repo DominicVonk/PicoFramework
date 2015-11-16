@@ -1,48 +1,53 @@
 Pico.UI.Label = class Label extends Pico.UI.Control {
 	constructor(text) {
 		super();
-		this._text = text === undefined ? '' : text;
-		this._domElement.className = 'pico-label';
-		this._domElement.innerHTML = this._text;
-		this._font = new Pico.Font();
-		this._alignMode = Pico.AlignMode.Left;
-		var cssArgs = this._font.toCSSArgs();
-		this._domElement.style.fontSize = cssArgs.fontSize;
-		this._domElement.style.fontWeight = cssArgs.fontWeight;
-		this._domElement.style.textDecoration = cssArgs.textDecoration;
-		this._domElement.style.fontStyle = cssArgs.fontStyle;
-		this._domElement.style.fontFamily = cssArgs.fontFamily;
-		this._domElement.style.textAlign = this._alignMode;
+		/* Private variable name declaration */
+		this._private.text = Symbol();
+		this._private.alignMode = Symbol();
+		this._private.font = Symbol();
+		/* End private variable name declaration */
+		this.private('text', text === undefined ? '' : text);
+		this.private('domElement').className = 'pico-label';
+		this.private('domElement').innerHTML = this.private('text');
+		this.private('font', new Pico.Font());
+		this.private('alignMode', Pico.AlignMode.Left);
+		var cssArgs = this.private('font').toCSSArgs();
+		this.private('domElement').style.fontSize = cssArgs.fontSize;
+		this.private('domElement').style.fontWeight = cssArgs.fontWeight;
+		this.private('domElement').style.textDecoration = cssArgs.textDecoration;
+		this.private('domElement').style.fontStyle = cssArgs.fontStyle;
+		this.private('domElement').style.fontFamily = cssArgs.fontFamily;
+		this.private('domElement').style.textAlign = this.private('alignMode');
 	}
 	set font(font) {
 		if (font instanceof Pico.Font) {
-			this._font = font;
-			var cssArgs = this._font.toCSSArgs();
-			this._domElement.style.fontSize = cssArgs.fontSize;
-			this._domElement.style.fontWeight = cssArgs.fontWeight;
-			this._domElement.style.textDecoration = cssArgs.textDecoration;
-			this._domElement.style.fontStyle = cssArgs.fontStyle;
-			this._domElement.style.fontFamily = cssArgs.fontFamily;
+			this.private('font', font);
+			var cssArgs = this.private('font').toCSSArgs();
+			this.private('domElement').style.fontSize = cssArgs.fontSize;
+			this.private('domElement').style.fontWeight = cssArgs.fontWeight;
+			this.private('domElement').style.textDecoration = cssArgs.textDecoration;
+			this.private('domElement').style.fontStyle = cssArgs.fontStyle;
+			this.private('domElement').style.fontFamily = cssArgs.fontFamily;
 		}
 	}
 	get font() {
-		return Object.create(this._font);
+		return Object.create(this.private('font'));
 	}
 
 	set text(text) {
-		this._text = text;
-		this._domElement.innerHTML = this._text;
+		this.private('text', text);
+		this.private('domElement').innerHTML = this.private('text');
 	}
 	get text() {
-		return this._text;
+		return this.private('text');
 	}
 
 	set alignMode(alignMode) {
-		this._alignMode = alignMode;
-		this._domElement.style.textAlign = this._alignMode;
+		this.private('alignMode', alignMode);
+		this.private('domElement').style.textAlign = this.private('alignMode');
 	}
 
 	get alignMode() {
-		return this._alignMode;
+		return this.private('alignMode');
 	}
 }

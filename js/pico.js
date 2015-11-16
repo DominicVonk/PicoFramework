@@ -476,7 +476,7 @@ Pico.Margin = (function () {
 		key: 'apply',
 		value: function apply() {
 			if (typeof this._picoObject !== "undefined") {
-				this._picoObject.domElement.style.margin = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
+				this._picoObject.private('domElement').style.margin = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
 			}
 		}
 	}, {
@@ -544,7 +544,7 @@ Pico.Padding = (function () {
 		key: 'apply',
 		value: function apply() {
 			if (typeof this._picoObject !== "undefined") {
-				this._picoObject.domElement.style.padding = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
+				this._picoObject.private('domElement').style.padding = this._top + 'px ' + this._right + 'px ' + this._bottom + 'px ' + this._left + 'px';
 			}
 		}
 	}, {
@@ -603,8 +603,8 @@ Pico.Position = (function () {
 		key: 'apply',
 		value: function apply() {
 			if (typeof this._picoObject !== "undefined") {
-				this._picoObject.domElement.style.left = this._x + 'px';
-				this._picoObject.domElement.style.top = this._y + 'px';
+				this._picoObject.private('domElement').style.left = this._x + 'px';
+				this._picoObject.private('domElement').style.top = this._y + 'px';
 			}
 		}
 	}, {
@@ -645,8 +645,8 @@ Pico.Size = (function () {
 		key: 'apply',
 		value: function apply() {
 			if (typeof this._picoObject !== "undefined") {
-				this._picoObject.domElement.style.height = this._height + 'px';
-				this._picoObject.domElement.style.width = this._width + 'px';
+				this._picoObject.private('domElement').style.height = this._height + 'px';
+				this._picoObject.private('domElement').style.width = this._width + 'px';
 			}
 		}
 	}, {
@@ -694,7 +694,7 @@ Pico.UI._Elements = (function () {
 
 			for (var i = 0; i < arg.length; i++) {
 				this._array.push(arg[i]);
-				this._domElement.appendChild(arg[i].domElement);
+				this._domElement.appendChild(arg[i].private('domElement'));
 			}
 		}
 	}, {
@@ -706,14 +706,14 @@ Pico.UI._Elements = (function () {
 		key: 'removeLast',
 		value: function removeLast() {
 			var item = this._array.pop();
-			this._domElement.removeChild(item.domElement);
+			this._domElement.removeChild(item.private('domElement'));
 			return item;
 		}
 	}, {
 		key: 'removeAt',
 		value: function removeAt(i) {
 			var item = this._array.splice(i, 1);
-			this._domElement.removeChild(item.domElement);
+			this._domElement.removeChild(item.private('domElement'));
 			return item;
 		}
 	}, {
@@ -726,11 +726,11 @@ Pico.UI._Elements = (function () {
 			var item = this._array.splice(i, 0, arg);
 			if (this._domElement.childNodes[i] === this._domElement.lastChild) {
 				for (var i = 0; i < arg.length; i++) {
-					this._domElement.appendChild(arg[i].domElement);
+					this._domElement.appendChild(arg[i].private('domElement'));
 				}
 			} else {
 				for (var i = 0; i < arg.length; i++) {
-					this._domElement.insertBefore(arg[i].domElement, this._domElement.childNodes[i].nextSibling);
+					this._domElement.insertBefore(arg[i].private('domElement'), this._domElement.childNodes[i].nextSibling);
 				}
 			}
 		}
@@ -767,7 +767,7 @@ Pico.UI._Event = (function () {
 			}
 			if (!this._eventSet) {
 				if (this._jsEvent) {
-					this._control.domElement.addEventListener(this._eventName, this._listener);
+					this._control.private('domElement').addEventListener(this._eventName, this._listener);
 				}
 				this._eventSet = true;
 			}
@@ -780,7 +780,7 @@ Pico.UI._Event = (function () {
 			}
 			if (this._eventSet && this._array.length === 0) {
 				if (this._jsEvent) {
-					this._control.domElement.removeEventListener(this._eventName, this._listener);
+					this._control.private('domElement').removeEventListener(this._eventName, this._listener);
 				}
 				this._eventSet = false;
 			}
@@ -794,13 +794,30 @@ Pico.UI._Event = (function () {
 
 	return Event;
 })();
+/* Private names */
 Pico.UI.Control = (function () {
 	function Control() {
 		_classCallCheck(this, Control);
 
-		this._events = {};
-		this._listeners = {};
-		this._domElement = Pico.UI._newDomElement();
+		/* Private variable name declaration */
+		this._private = {};
+		this._private.events = Symbol();
+		this._private.listeners = Symbol();
+		this._private.domElement = Symbol();
+		this._private.margin = Symbol();
+		this._private.padding = Symbol();
+		this._private.background = Symbol();
+		this._private.foreground = Symbol();
+		this._private.cursor = Symbol();
+		this._private.position = Symbol();
+		this._private.size = Symbol();
+		this._private.visible = Symbol();
+		/* End private variable name declaration */
+
+		this.private('events', {});
+		this.private('listeners', {});
+		this.private('domElement', Pico.UI._newDomElement());
+		this.private('domElement').style.overflow = 'hidden';
 		this.eventClick = new Pico.UI._Event(this, 'click', true);
 		this.eventMouseDown = new Pico.UI._Event(this, 'mousedown', true);
 		this.eventMouseUp = new Pico.UI._Event(this, 'mouseup', true);
@@ -812,7 +829,6 @@ Pico.UI.Control = (function () {
 		this.eventForegroundChanged = new Pico.UI._Event(this, 'foregroundChanged');
 		this.eventVisibleChanged = new Pico.UI._Event(this, 'visiblechanged');
 		this.eventMoved = new Pico.UI._Event(this, 'moved');
-		this._domElement.style.overflow = 'hidden';
 		this.size = new Pico.Size(0, 0);
 		this.position = new Pico.Position(0, 0);
 		this.padding = new Pico.Padding(0);
@@ -824,100 +840,103 @@ Pico.UI.Control = (function () {
 	}
 
 	_createClass(Control, [{
+		key: 'private',
+		value: function _private(get, set) {
+			if (typeof set !== "undefined") {
+				this[this._private[get]] = set;
+			}
+			return this[this._private[get]];
+		}
+	}, {
 		key: 'margin',
 		set: function set(margin) {
 			if (_instanceof(margin, Pico.Margin)) {
-				this._margin = new Pico.Margin(margin.top, margin.left, margin.bottom, margin.right, this);
+				this.private('margin', new Pico.Margin(margin.top, margin.left, margin.bottom, margin.right, this));
 			}
 		},
 		get: function get() {
-			return this._margin;
+			return this.private('margin');
 		}
 	}, {
 		key: 'padding',
 		set: function set(padding) {
 			if (_instanceof(padding, Pico.Padding)) {
-				this._padding = new Pico.Padding(padding.top, padding.left, padding.bottom, padding.right, this);
+				this.private('padding', new Pico.Padding(padding.top, padding.left, padding.bottom, padding.right, this));
 			}
 		},
 		get: function get() {
-			return this._padding;
+			return this.private('padding');
 		}
 	}, {
 		key: 'background',
 		set: function set(color) {
 			if (_instanceof(color, Pico.Color)) {
-				this._background = color;
+				this.private('background', color);
 			} else {
-				this._background = new Pico.Color(color);
+				this.private('background', new Pico.Color(color));
 			}
-			this._domElement.style.backgroundColor = this._background.toRgba();
+			this.private('domElement').style.backgroundColor = this.private('background').toRgba();
 			this.eventBackgroundChanged.trigger();
 		},
 		get: function get() {
-			return Object.create(this._background);
+			return Object.create(this.private('background'));
 		}
 	}, {
 		key: 'foreground',
 		set: function set(color) {
 			if (_instanceof(color, Pico.Color)) {
-				this._foreground = color;
+				this.private('foreground', color);
 			} else {
-				this._foreground = new Pico.Color(color);
+				this.private('foreground', new Pico.Color(color));
 			}
-			this._domElement.style.color = this._foreground.toRgba();
+			this.private('domElement').style.color = this.private('foreground').toRgba();
 			this.eventForegroundChanged.trigger();
 		},
 		get: function get() {
-			return Object.create(this._foreground);
+			return Object.create(this.private('foreground'));
 		}
 	}, {
 		key: 'cursor',
 		set: function set(cursor) {
 			if (_instanceof(cursor, Pico.Cursor)) {
-				this._cursor = cursor;
-				this._domElement.style.cursor = this._cursor.style;
+				this.private('cursor', cursor);
+				this.private('domElement').style.cursor = this.private('cursor').style;
 			}
 		},
 		get: function get() {
-			return Object.create(this._cursor);
+			return Object.create(this.private('cursor'));
 		}
 	}, {
 		key: 'position',
 		set: function set(position) {
 			if (_instanceof(position, Pico.Position)) {
-				this._position = new Pico.Position(position.x, position.y, this);
+				this.private('position', new Pico.Position(position.x, position.y, this));
 				this.eventMoved.trigger();
 			}
 		},
 		get: function get() {
-			return this._position;
+			return this.private('position');
 		}
 	}, {
 		key: 'size',
 		set: function set(size) {
 			if (_instanceof(size, Pico.Size)) {
-				this._size = new Pico.Size(size.width, size.height, this);
+				this.private('size', new Pico.Size(size.width, size.height, this));
 				this.eventResized.trigger();
 			}
 		},
 		get: function get() {
-			return this._size;
+			return this.private('size');
 		}
 	}, {
 		key: 'visible',
 		set: function set(visible) {
-			this._visible = visible;
-			this._domElement.style.display = this._visible ? 'block' : 'none';
+			this.private('visible', visible);
+			this.private('domElement').style.display = this.private('visible') ? 'block' : 'none';
 			this.eventVisibleChanged.trigger();
 		},
 		get: function get() {
-			return this._visible;
-		}
-	}, {
-		key: 'domElement',
-		get: function get() {
-			return this._domElement;
+			return this.private('visible');
 		}
 	}]);
 
@@ -929,20 +948,25 @@ Pico.UI.Panel = (function (_Pico$UI$Control) {
 	function Panel() {
 		_classCallCheck(this, Panel);
 
+		/* Private variable name declaration */
+
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Panel).call(this));
 
-		_this._domElements = Pico.UI._newDomElement();
-		_this._domElements.className = 'pico-elements';
-		_this._domElement.appendChild(_this._domElements);
-		_this._domElement.className = 'pico-panel';
-		_this._elements = new Pico.UI._Elements(_this._domElements);
+		_this._private.elements = Symbol();
+		_this._private.domElements = Symbol();
+		/* End private variable name declaration */
+		_this.private('domElements', Pico.UI._newDomElement());
+		_this.private('domElements').className = 'pico-elements';
+		_this.private('domElement').appendChild(_this.private('domElements'));
+		_this.private('domElement').className = 'pico-panel';
+		_this.private('elements', new Pico.UI._Elements(_this.private('domElements')));
 		return _this;
 	}
 
 	_createClass(Panel, [{
 		key: 'elements',
 		get: function get() {
-			return this._elements;
+			return this.private('elements');
 		}
 	}]);
 
@@ -954,39 +978,45 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 	function Window(title) {
 		_classCallCheck(this, Window);
 
+		/* Private variable name declaration */
+
 		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Window).call(this));
 
+		_this2._private.title = Symbol();
+		_this2._private.titleElement = Symbol();
+		_this2._private.minimizeElement = Symbol();
+		/* End private variable name declaration */
 		_this2.visible = false;
-		_this2._title = title === undefined ? '' : title;
-		_this2._titleElement = Pico.UI._newDomElement();
-		_this2._titleElement.className = 'pico-window-title';
-		_this2._titleElement.innerHTML = _this2._title;
-		_this2._minimizeElement = Pico.UI._newDomElement();
-		_this2._minimizeElement.className = 'pico-minimize';
-		_this2._minimizeElement.innerHTML = '–︎';
-		_this2._domElement.className = 'pico-window';
-		_this2._domElement.appendChild(_this2._titleElement);
-		_this2._domElement.appendChild(_this2._minimizeElement);
+		_this2.private('title', title === undefined ? '' : title);
+		_this2.private('titleElement', Pico.UI._newDomElement());
+		_this2.private('titleElement').className = 'pico-window-title';
+		_this2.private('titleElement').innerHTML = _this2.private('title');
+		_this2.private('minimizeElement', Pico.UI._newDomElement());
+		_this2.private('minimizeElement').className = 'pico-minimize';
+		_this2.private('minimizeElement').innerHTML = '–︎';
+		_this2.private('domElement').className = 'pico-window';
+		_this2.private('domElement').appendChild(_this2.private('titleElement'));
+		_this2.private('domElement').appendChild(_this2.private('minimizeElement'));
 		var diff = {};
 		var move = false;
 		var open = true;
 		var obj = _this2;
-		_this2._minimizeElement.addEventListener('click', function (e) {
+		_this2.private('minimizeElement').addEventListener('click', function (e) {
 			if (!open) {
 				e.target.innerHTML = '–︎';
-				obj._domElement.style.height = obj.size.height + 'px';
+				obj.private('domElement').style.height = obj.size.height + 'px';
 				if (obj.position.y + obj.size.height >= window.innerHeight) {
 					obj.position = new Pico.Position(obj.position.x, obj.position.y - (obj.position.y + obj.size.height - window.innerHeight));
 				}
-				obj._elements._domElement.style.display = 'block';
+				obj.private('elements')._domElement.style.display = 'block';
 			} else {
 				e.target.innerHTML = '◻';
-				obj._domElement.style.height = 20 + 'px';
-				obj._elements._domElement.style.display = 'none';
+				obj.private('domElement').style.height = 20 + 'px';
+				obj.private('elements')._domElement.style.display = 'none';
 			}
 			open = !open;
 		});
-		_this2._titleElement.addEventListener('mousedown', function (e) {
+		_this2.private('titleElement').addEventListener('mousedown', function (e) {
 			diff.x = e.offsetX;
 			diff.y = e.offsetY;
 			move = true;
@@ -1004,11 +1034,11 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 				if (y < 0) {
 					y = 0;
 				}
-				if (x + obj._titleElement.clientWidth >= window.innerWidth) {
-					x = window.innerWidth - obj._titleElement.clientWidth - 1;
+				if (x + obj.private('titleElement').clientWidth >= window.innerWidth) {
+					x = window.innerWidth - obj.private('titleElement').clientWidth - 1;
 				}
-				if (y + obj._domElement.clientHeight >= window.innerHeight) {
-					y = window.innerHeight - obj._domElement.clientHeight;
+				if (y + obj.private('domElement').clientHeight >= window.innerHeight) {
+					y = window.innerHeight - obj.private('domElement').clientHeight;
 				}
 
 				obj.position = new Pico.Position(x, y);
@@ -1024,22 +1054,22 @@ Pico.UI.Window = (function (_Pico$UI$Panel) {
 		key: 'show',
 		value: function show() {
 			this.visible = true;
-			document.body.appendChild(this._domElement);
+			document.body.appendChild(this.private('domElement'));
 		}
 	}, {
 		key: 'hide',
 		value: function hide() {
 			this.visible = false;
-			document.body.removeChild(this._domElement);
+			document.body.removeChild(this.private('domElement'));
 		}
 	}, {
 		key: 'title',
 		set: function set(title) {
-			this._title = title;
-			this._titleElement.innerHTML = this._title;
+			this.private('title', title);
+			this.private('titleElement').innerHTML = this.private('title');
 		},
 		get: function get() {
-			return this._title;
+			return this.private('title');
 		}
 	}]);
 
@@ -1052,20 +1082,26 @@ Pico.UI.Label = (function (_Pico$UI$Control2) {
 	function Label(text) {
 		_classCallCheck(this, Label);
 
+		/* Private variable name declaration */
+
 		var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Label).call(this));
 
-		_this3._text = text === undefined ? '' : text;
-		_this3._domElement.className = 'pico-label';
-		_this3._domElement.innerHTML = _this3._text;
-		_this3._font = new Pico.Font();
-		_this3._alignMode = Pico.AlignMode.Left;
-		var cssArgs = _this3._font.toCSSArgs();
-		_this3._domElement.style.fontSize = cssArgs.fontSize;
-		_this3._domElement.style.fontWeight = cssArgs.fontWeight;
-		_this3._domElement.style.textDecoration = cssArgs.textDecoration;
-		_this3._domElement.style.fontStyle = cssArgs.fontStyle;
-		_this3._domElement.style.fontFamily = cssArgs.fontFamily;
-		_this3._domElement.style.textAlign = _this3._alignMode;
+		_this3._private.text = Symbol();
+		_this3._private.alignMode = Symbol();
+		_this3._private.font = Symbol();
+		/* End private variable name declaration */
+		_this3.private('text', text === undefined ? '' : text);
+		_this3.private('domElement').className = 'pico-label';
+		_this3.private('domElement').innerHTML = _this3.private('text');
+		_this3.private('font', new Pico.Font());
+		_this3.private('alignMode', Pico.AlignMode.Left);
+		var cssArgs = _this3.private('font').toCSSArgs();
+		_this3.private('domElement').style.fontSize = cssArgs.fontSize;
+		_this3.private('domElement').style.fontWeight = cssArgs.fontWeight;
+		_this3.private('domElement').style.textDecoration = cssArgs.textDecoration;
+		_this3.private('domElement').style.fontStyle = cssArgs.fontStyle;
+		_this3.private('domElement').style.fontFamily = cssArgs.fontFamily;
+		_this3.private('domElement').style.textAlign = _this3.private('alignMode');
 		return _this3;
 	}
 
@@ -1073,35 +1109,35 @@ Pico.UI.Label = (function (_Pico$UI$Control2) {
 		key: 'font',
 		set: function set(font) {
 			if (_instanceof(font, Pico.Font)) {
-				this._font = font;
-				var cssArgs = this._font.toCSSArgs();
-				this._domElement.style.fontSize = cssArgs.fontSize;
-				this._domElement.style.fontWeight = cssArgs.fontWeight;
-				this._domElement.style.textDecoration = cssArgs.textDecoration;
-				this._domElement.style.fontStyle = cssArgs.fontStyle;
-				this._domElement.style.fontFamily = cssArgs.fontFamily;
+				this.private('font', font);
+				var cssArgs = this.private('font').toCSSArgs();
+				this.private('domElement').style.fontSize = cssArgs.fontSize;
+				this.private('domElement').style.fontWeight = cssArgs.fontWeight;
+				this.private('domElement').style.textDecoration = cssArgs.textDecoration;
+				this.private('domElement').style.fontStyle = cssArgs.fontStyle;
+				this.private('domElement').style.fontFamily = cssArgs.fontFamily;
 			}
 		},
 		get: function get() {
-			return Object.create(this._font);
+			return Object.create(this.private('font'));
 		}
 	}, {
 		key: 'text',
 		set: function set(text) {
-			this._text = text;
-			this._domElement.innerHTML = this._text;
+			this.private('text', text);
+			this.private('domElement').innerHTML = this.private('text');
 		},
 		get: function get() {
-			return this._text;
+			return this.private('text');
 		}
 	}, {
 		key: 'alignMode',
 		set: function set(alignMode) {
-			this._alignMode = alignMode;
-			this._domElement.style.textAlign = this._alignMode;
+			this.private('alignMode', alignMode);
+			this.private('domElement').style.textAlign = this.private('alignMode');
 		},
 		get: function get() {
-			return this._alignMode;
+			return this.private('alignMode');
 		}
 	}]);
 
@@ -1113,10 +1149,14 @@ Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
 	function LinkLabel(text, link) {
 		_classCallCheck(this, LinkLabel);
 
+		/* Private variable name declaration */
+
 		var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkLabel).call(this, text));
 
-		_this4._domElement.className = 'pico-linklabel';
-		_this4._href = link;
+		_this4._private.href = Symbol();
+		/* End private variable name declaration */
+		_this4.private('domElement').className = 'pico-linklabel';
+		_this4.private('href', link);
 		_this4.foreground = Pico.Colors.PicoLink;
 		var oldfont = _this4.font;
 		oldfont.underline = true;
@@ -1124,7 +1164,7 @@ Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
 		_this4.cursor = Pico.Cursors.Pointer;
 		var obj = _this4;
 		_this4._domElement.addEventListener('click', function (e) {
-			window.open(obj._href, 'new');
+			window.open(obj.private('href'), 'new');
 		});
 		return _this4;
 	}
@@ -1132,10 +1172,10 @@ Pico.UI.LinkLabel = (function (_Pico$UI$Label) {
 	_createClass(LinkLabel, [{
 		key: 'href',
 		set: function set(href) {
-			this._href = href;
+			this.private('href', href);
 		},
 		get: function get() {
-			return this._href;
+			return this.private('href');
 		}
 	}]);
 
@@ -1147,45 +1187,53 @@ Pico.UI.Picture = (function (_Pico$UI$Control3) {
 	function Picture(image) {
 		_classCallCheck(this, Picture);
 
+		/* Private variable name declaration */
+
 		var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Picture).call(this));
 
-		_this5._image = image;
-		_this5._sizeMode = Pico.SizeMode.Normal;
-		_this5._imageRepeat = true;
-		_this5._domElement.className = 'pico-picture';
-		_this5._domElement.style.backgroundImage = 'url(' + _this5._image + ')';
-		_this5._alignMode = Pico.AlignMode.Left;
-		_this5._verticalAlignMode = Pico.VerticalAlignMode.Top;
-		_this5._domElement.style.backgroundPosition = _this5._verticalAlignMode + ' ' + _this5._alignMode;
-		_this5._domElement.style.backgroundRepeat = _this5._imageRepeat ? 'repeat' : 'no-repeat';
+		_this5._private.image = Symbol();
+		_this5._private.sizeMode = Symbol();
+		_this5._private.imageRepeat = Symbol();
+		_this5._private.alignMode = Symbol();
+		_this5._private.verticalAlignMode = Symbol();
+		/* End private variable name declaration */
+		_this5.private('image', image);
+		_this5.private('sizeMode', Pico.SizeMode.Normal);
+		_this5.private('imageRepeat', true);
+		_this5.private('domElement').className = 'pico-picture';
+		_this5.private('domElement').style.backgroundImage = 'url(' + _this5.private('image') + ')';
+		_this5.private('alignMode', Pico.AlignMode.Left);
+		_this5.private('verticalAlignMode', Pico.VerticalAlignMode.Top);
+		_this5.private('domElement').style.backgroundPosition = _this5.private('verticalAlignMode') + ' ' + _this5.private('alignMode');
+		_this5.private('domElement').style.backgroundRepeat = _this5.private('imageRepeat') ? 'repeat' : 'no-repeat';
 		return _this5;
 	}
 
 	_createClass(Picture, [{
 		key: 'image',
 		set: function set(image) {
-			this._image = image;
-			this._domElement.style.backgroundImage = 'url(' + image + ')';
+			this.private('image', image);
+			this.private('domElement').style.backgroundImage = 'url(' + image + ')';
 		},
 		get: function get() {
-			return this._image;
+			return this.private('image');
 		}
 	}, {
 		key: 'size',
 		set: function set(size) {
 			_set(Object.getPrototypeOf(Picture.prototype), 'size', size, this);
-			if (this._sizeMode === Pico.SizeMode.Normal) {
-				this._domElement.style.webkitBackgroundSize = '';
-				this._domElement.style.backgroundSize = '';
-			} else if (this._sizeMode === Pico.SizeMode.Cover) {
-				this._domElement.style.webkitBackgroundSize = 'cover';
-				this._domElement.style.backgroundSize = 'cover';
-			} else if (this._sizeMode === Pico.SizeMode.Contain) {
-				this._domElement.style.webkitBackgroundSize = 'contain';
-				this._domElement.style.backgroundSize = 'contain';
-			} else if (this._sizeMode === Pico.SizeMode.Stretch) {
-				this._domElement.style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
-				this._domElement.style.backgroundSize = size.width + 'px ' + size.height + 'px';
+			if (this.private('sizeMode') === Pico.SizeMode.Normal) {
+				this.private('domElement').style.webkitBackgroundSize = '';
+				this.private('domElement').style.backgroundSize = '';
+			} else if (this.private('sizeMode') === Pico.SizeMode.Cover) {
+				this.private('domElement').style.webkitBackgroundSize = 'cover';
+				this.private('domElement').style.backgroundSize = 'cover';
+			} else if (this.private('sizeMode') === Pico.SizeMode.Contain) {
+				this.private('domElement').style.webkitBackgroundSize = 'contain';
+				this.private('domElement').style.backgroundSize = 'contain';
+			} else if (this.private('sizeMode') === Pico.SizeMode.Stretch) {
+				this.private('domElement').style.webkitBackgroundSize = size.width + 'px ' + size.height + 'px';
+				this.private('domElement').style.backgroundSize = size.width + 'px ' + size.height + 'px';
 			}
 		},
 		get: function get() {
@@ -1194,38 +1242,38 @@ Pico.UI.Picture = (function (_Pico$UI$Control3) {
 	}, {
 		key: 'sizeMode',
 		set: function set(sizeMode) {
-			this._sizeMode = sizeMode;
+			this.private('sizeMode', sizeMode);
 			this.size = this.size;
 		},
 		get: function get() {
-			return this._sizeMode;
+			return this.private('sizeMode');
 		}
 	}, {
 		key: 'alignMode',
 		set: function set(alignMode) {
-			this._alignMode = alignMode;
-			this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+			this.private('alignMode', alignMode);
+			this.private('domElement').style.backgroundPosition = this.private('verticalAlignMode') + ' ' + this.private('alignMode');
 		},
 		get: function get() {
-			return this._alignMode;
+			return this.private('alignMode');
 		}
 	}, {
 		key: 'verticalAlignMode',
 		set: function set(verticalAlignMode) {
-			this._verticalAlignMode = verticalAlignMode;
-			this._domElement.style.backgroundPosition = this._verticalAlignMode + ' ' + this._alignMode;
+			this.private('verticalAlignMode', verticalAlignMode);
+			this.private('domElement').style.backgroundPosition = this.private('verticalAlignMode') + ' ' + this.private('alignMode');
 		},
 		get: function get() {
-			return this._verticalAlignMode;
+			return this.private('verticalAlignMode');
 		}
 	}, {
 		key: 'imageRepeat',
 		set: function set(imageRepeat) {
-			this._imageRepeat = imageRepeat;
-			this._domElement.style.backgroundRepeat = this._imageRepeat ? 'repeat' : 'no-repeat';
+			this.private('imageRepeat', imageRepeat);
+			this.private('domElement').style.backgroundRepeat = this.private('imageRepeat') ? 'repeat' : 'no-repeat';
 		},
 		get: function get() {
-			return this._imageRepeat;
+			return this.private('imageRepeat');
 		}
 	}]);
 
@@ -1239,22 +1287,22 @@ Pico.UI.Button = (function (_Pico$UI$Label2) {
 
 		var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(Button).call(this, text));
 
-		_this6._domElement.style.borderRadius = '3px';
+		_this6.private('domElement').style.borderRadius = '3px';
 		_this6.padding = new Pico.Padding(5, 5, 5, 5);
 		_this6.background = new Pico.Color(70, 70, 70);
-		_this6._domElement.className = 'pico-button';
+		_this6.private('domElement').className = 'pico-button';
 		_this6.cursor = Pico.Cursors.Pointer;
-		_this6._domElement.style.mozTransition = 'background-image 300ms ease';
-		_this6._domElement.style.webkitTransition = 'background-image 300ms ease';
-		_this6._domElement.style.msTransition = 'background-image 300ms ease';
-		_this6._domElement.style.oTransition = 'background-image 300ms ease';
-		_this6._domElement.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
+		_this6.private('domElement').style.mozTransition = 'background-image 300ms ease';
+		_this6.private('domElement').style.webkitTransition = 'background-image 300ms ease';
+		_this6.private('domElement').style.msTransition = 'background-image 300ms ease';
+		_this6.private('domElement').style.oTransition = 'background-image 300ms ease';
+		_this6.private('domElement').style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
 		var obj = _this6;
-		_this6._domElement.addEventListener('mouseenter', function () {
-			obj._domElement.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
+		_this6.private('domElement').addEventListener('mouseenter', function () {
+			obj.private('domElement').style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
 		});
-		_this6._domElement.addEventListener('mouseleave', function () {
-			obj._domElement.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
+		_this6.private('domElement').addEventListener('mouseleave', function () {
+			obj.private('domElement').style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89ImZhbHNlIj48ZGVmcz4gPGxpbmVhckdyYWRpZW50IGlkPSJsZ3JhZCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSIwJSIgPiA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMCwwLDApO3N0b3Atb3BhY2l0eTowLjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3N0b3Atb3BhY2l0eTowLjEiIC8+PC9saW5lYXJHcmFkaWVudD4gPC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGdyYWQpIi8+PC9zdmc+)';
 		});
 		return _this6;
 	}
@@ -1268,34 +1316,38 @@ Pico.UI.TextBox = (function (_Pico$UI$Label3) {
 	function TextBox(defaultText) {
 		_classCallCheck(this, TextBox);
 
+		/* Private variable name declaration */
+
 		var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(TextBox).call(this, defaultText));
 
-		_this7._domElement.style.border = '1px solid #686868';
+		_this7._private.multiline = Symbol();
+		/* End private variable name declaration */
+		_this7.private('domElement').style.border = '1px solid #686868';
 		_this7.padding = new Pico.Padding(5, 5, 5, 5);
-		_this7._domElement.contentEditable = true;
-		_this7._domElement.style.outline = '0';
-		_this7._domElement.className = "pico-textbox";
+		_this7.private('domElement').contentEditable = true;
+		_this7.private('domElement').style.outline = '0';
+		_this7.private('domElement').className = "pico-textbox";
 		_this7.eventTextChanged = new Pico.UI._Event(_this7, 'textchanged');
 		var obj = _this7;
-		_this7._multiline = false;
-		_this7._domElement.addEventListener('keydown', function (e) {
-			if (!obj._multiline) {
+		_this7.private('multiline', false);
+		_this7.private('domElement').addEventListener('keydown', function (e) {
+			if (!obj.private('multiline')) {
 				if (e.keyCode == 13) {
 					e.preventDefault();
 				}
 			}
 		});
-		_this7._domElement.addEventListener('paste', function (e) {
+		_this7.private('domElement').addEventListener('paste', function (e) {
 			e.preventDefault();
 			var data = e.clipboardData.getData("text/plain");
-			if (!obj._multiline) {
+			if (!obj.private('multiline')) {
 				data = data.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
 			}
 			document.execCommand('inserttext', false, data);
 			obj.eventTextChanged.trigger();
 		});
-		_this7._domElement.addEventListener('keyup', function () {
-			obj._text = obj._domElement.innerHTML.replace(/<div>(.*?)<\/div>/g, '$1\n').replace(/<br>/g, '\n');
+		_this7.private('domElement').addEventListener('keyup', function () {
+			obj.private('text', obj.private('domElement').innerHTML.replace(/<div>(.*?)<\/div>/g, '$1\n').replace(/<br>/g, '\n'));
 			obj.eventTextChanged.trigger();
 		});
 		return _this7;
@@ -1304,19 +1356,19 @@ Pico.UI.TextBox = (function (_Pico$UI$Label3) {
 	_createClass(TextBox, [{
 		key: 'text',
 		set: function set(text) {
-			this._text = text;
-			this._domElement.innerHTML = this._text.replace(/\n/g, '<br>');
+			this.private('text', text);
+			this.private('domElement').innerHTML = this._text.replace(/\n/g, '<br>');
 		},
 		get: function get() {
-			return this._text;
+			return this.private('text');
 		}
 	}, {
 		key: 'multiline',
 		set: function set(multiline) {
-			this._multiline = multiline;
+			this.private('multiline', multiline);
 		},
 		get: function get() {
-			return this._multiline;
+			return this.private('multiline');
 		}
 	}]);
 
@@ -1328,16 +1380,20 @@ Pico.UI.CheckBox = (function (_Pico$UI$Label4) {
 	function CheckBox(text, checked) {
 		_classCallCheck(this, CheckBox);
 
+		/* Private variable name declaration */
+
 		var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(CheckBox).call(this, text));
 
-		_this8._domElement.className = 'pico-checkbox';
+		_this8._private.checked = Symbol();
+		/* End private variable name declaration */
 		_this8.eventCheckChanged = new Pico.UI._Event(_this8, 'checkChanged');
-		_this8.checked = checked ? true : false;
-		_this8._domElement.style.backgroundRepeat = 'no-repeat';
-		_this8._domElement.style.backgroundPosition = 'left center';
+		_this8.checked = checked ? true : false;;
 		_this8.padding = new Pico.Padding(3);
 		var obj = _this8;
-		_this8._domElement.addEventListener('click', function () {
+		_this8.private('domElement').className = 'pico-checkbox';
+		_this8.private('domElement').style.backgroundRepeat = 'no-repeat';
+		_this8.private('domElement').style.backgroundPosition = 'left center';
+		_this8.private('domElement').addEventListener('click', function () {
 			obj.checked = !obj.checked;
 		});
 		return _this8;
@@ -1346,14 +1402,14 @@ Pico.UI.CheckBox = (function (_Pico$UI$Label4) {
 	_createClass(CheckBox, [{
 		key: 'checked',
 		set: function set(checked) {
-			this._checked = checked;
+			this.private('checked', checked);
 			var checkimg = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxMnB4IiB2aWV3Qm94PSIwIDAgMTIgMTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM6c2tldGNoPSJodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2gvbnMiPiAgICAgICAgPHRpdGxlPlJlY3RhbmdsZSA5IENvcHkgMyArIExpbmUgKyBMaW5lIENvcHk8L3RpdGxlPiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4gICAgPGRlZnM+PC9kZWZzPiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4gICAgICAgIDxnIGlkPSJUYWJsZXQtOeKAsy1MYW5kc2NhcGUiIHNrZXRjaDp0eXBlPSJNU0FydGJvYXJkR3JvdXAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNzEuMDAwMDAwLCAtMjg0LjAwMDAwMCkiPiAgICAgICAgICAgIDxnIGlkPSJSZWN0YW5nbGUtOS1Db3B5LTMtKy1MaW5lLSstTGluZS1Db3B5IiBza2V0Y2g6dHlwZT0iTVNMYXllckdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzEuMDAwMDAwLCAyODQuMDAwMDAwKSI+ICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtOS1Db3B5LTMiIHN0cm9rZT0iIzY4Njg2OCIgZmlsbD0iIzM3MzczNyIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIj48L3JlY3Q+ICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0zLDcgTDQuNSw4LjUiIGlkPSJMaW5lIiBzdHJva2U9IiNBNkE2QTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCI+PC9wYXRoPiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNOSw0IEw0LjUsOC41IiBpZD0iTGluZS1Db3B5IiBzdHJva2U9IiNBNkE2QTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCI+PC9wYXRoPiAgICAgICAgICAgIDwvZz4gICAgICAgIDwvZz4gICAgPC9nPjwvc3ZnPg==)';
 			var defaultimg = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxMnB4IiB2aWV3Qm94PSIwIDAgMTIgMTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM6c2tldGNoPSJodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2gvbnMiPiAgICAgICAgPHRpdGxlPlJlY3RhbmdsZSA5PC90aXRsZT4gICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+ICAgIDxkZWZzPjwvZGVmcz4gICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc2tldGNoOnR5cGU9Ik1TUGFnZSI+ICAgICAgICA8ZyBpZD0iVGFibGV0LTnigLMtTGFuZHNjYXBlIiBza2V0Y2g6dHlwZT0iTVNBcnRib2FyZEdyb3VwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTcxLjAwMDAwMCwgLTI0NC4wMDAwMDApIiBzdHJva2U9IiM2ODY4NjgiIGZpbGw9IiMzNzM3MzciPiAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtOSIgc2tldGNoOnR5cGU9Ik1TU2hhcGVHcm91cCIgeD0iMTcxIiB5PSIyNDQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiI+PC9yZWN0PiAgICAgICAgPC9nPiAgICA8L2c+PC9zdmc+)';
 			this.eventCheckChanged.trigger();
-			this._domElement.style.backgroundImage = checked ? checkimg : defaultimg;
+			this.private('domElement').style.backgroundImage = checked ? checkimg : defaultimg;
 		},
 		get: function get() {
-			return this._checked;
+			return this.private('checked');
 		}
 	}, {
 		key: 'padding',
@@ -1373,22 +1429,29 @@ Pico.UI.ProgressBar = (function (_Pico$UI$Control4) {
 	function ProgressBar(percentage, min, max) {
 		_classCallCheck(this, ProgressBar);
 
+		/* Private variable name declaration */
+
 		var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(ProgressBar).call(this));
 
-		_this9._innerDom = Pico.UI._newDomElement();
-		_this9._minimum = typeof min !== "undefined" ? min : 0;
-		_this9._maximum = typeof max !== "undefined" ? max : 100;
-		_this9._percentage = typeof percentage !== "undefined" ? percentage : 0;
-		if (_this9._percentage < min) {
-			_this9._percentage = min;
+		_this9._private.innerDom = Symbol();
+		_this9._private.minimum = Symbol();
+		_this9._private.maximum = Symbol();
+		_this9._private.percentage = Symbol();
+		/* End private variable name declaration */
+		_this9.private('innerDom', Pico.UI._newDomElement());
+		_this9.private('minimum', typeof min !== "undefined" ? min : 0);
+		_this9.private('maximum', typeof max !== "undefined" ? max : 100);
+		_this9.private('percentage', typeof percentage !== "undefined" ? percentage : 0);
+		if (_this9.private('percentage') < min) {
+			_this9.private('percentage', min);
 		}
-		if (_this9._percentage > max) {
-			_this9._percentage = max;
+		if (_this9.private('percentage') > max) {
+			_this9.private('percentage', max);
 		}
-		_this9._domElement.className = 'pico-progressbar';
-		_this9._innerDom.className = 'pico-progressbar-inner';
-		_this9._innerDom.style.height = '100%';
-		_this9._domElement.appendChild(_this9._innerDom);
+		_this9.private('domElement').className = 'pico-progressbar';
+		_this9.private('innerDom').className = 'pico-progressbar-inner';
+		_this9.private('innerDom').style.height = '100%';
+		_this9.private('domElement').appendChild(_this9.private('innerDom'));
 		_this9._apply();
 		return _this9;
 	}
@@ -1396,40 +1459,40 @@ Pico.UI.ProgressBar = (function (_Pico$UI$Control4) {
 	_createClass(ProgressBar, [{
 		key: '_apply',
 		value: function _apply() {
-			this._innerDom.style.width = (this._percentage - this._minimum) / (this._maximum - this._minimum) * this.size.width + 'px';
+			this.private('innerDom').style.width = (this.private('percentage') - this.private('minimum')) / (this.private('maximum') - this.private('minimum')) * this.size.width + 'px';
 		}
 	}, {
 		key: 'percentage',
 		set: function set(percentage) {
-			this._percentage = percentage;
+			this.private('percentage', percentage);
 			this._apply();
 		},
 		get: function get() {
-			return this._percentage;
+			return this.private('percentage');
 		}
 	}, {
 		key: 'minimum',
 		set: function set(minimum) {
-			this._minimum = minimum;
+			this.private('minimum', minimum);
 			this._apply();
 		},
 		get: function get() {
-			return this._minimum;
+			return this.private('minimum');
 		}
 	}, {
 		key: 'maximum',
 		set: function set(maximum) {
-			this._maximum = maximum;
+			this.private('maximum', maximum);
 			this._apply();
 		},
 		get: function get() {
-			return this._maximum;
+			return this.private('maximum');
 		}
 	}, {
 		key: 'size',
 		set: function set(size) {
 			_set(Object.getPrototypeOf(ProgressBar.prototype), 'size', size, this);
-			if (typeof this._innerDom !== "undefined") {
+			if (typeof this.private('innerDom') !== "undefined") {
 				this._apply();
 			}
 		},

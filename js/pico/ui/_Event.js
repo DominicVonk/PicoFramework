@@ -18,7 +18,7 @@ Pico.UI._Event = class Event {
 		}
 		if (!this._eventSet) {
 			if (this._jsEvent) {
-				this._control.domElement.addEventListener(this._eventName, this._listener);
+				this._control.private('domElement').addEventListener(this._eventName, this._listener);
 			}
 			this._eventSet = true;
 		}
@@ -29,7 +29,7 @@ Pico.UI._Event = class Event {
 		}
 		if (this._eventSet && this._array.length === 0) {
 			if (this._jsEvent) {
-				this._control.domElement.removeEventListener(this._eventName, this._listener);
+				this._control.private('domElement').removeEventListener(this._eventName, this._listener);
 			}
 			this._eventSet = false;
 		}
